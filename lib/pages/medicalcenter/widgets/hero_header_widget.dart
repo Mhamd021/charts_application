@@ -15,15 +15,18 @@ class HeroHeaderWidget extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           // Cover image
-          SizedBox(
-            height: Dimensions.height10(context) * 28,
-            width: double.infinity,
-            child: medicalCenter.coverImageUrl != null
-                ? Image.network(
-                    "https://doctormap.onrender.com${medicalCenter.coverImageUrl}",
-                    fit: BoxFit.cover,
-                  )
-                : Container(color: Colors.grey[300]),
+          Hero(
+            tag: "medicalCenter_${medicalCenter.medicalCentersId}",
+            child: SizedBox(
+              height: Dimensions.height10(context) * 28,
+              width: double.infinity,
+              child: medicalCenter.coverImageUrl != null
+                  ? Image.network(
+                      "https://doctormap.onrender.com${medicalCenter.coverImageUrl}",
+                      fit: BoxFit.cover,
+                    )
+                  : Container(color: Colors.grey[300]),
+            ),
           ),
 
           // Gradient overlay
