@@ -27,7 +27,7 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Appointments", style: TextStyle(fontWeight: FontWeight.bold ,color: Colors.white)),
+        title:  Text("My Appointments".tr, style: TextStyle(fontWeight: FontWeight.bold ,color: Colors.white)),
         backgroundColor: Colors.blue,
         elevation: 4,
       ),
@@ -43,7 +43,7 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> {
 
           if (appointmentController.appointments.isEmpty) {
             return Center(
-              child: Text("No appointments found", 
+              child: Text("No appointments found".tr, 
                 style: TextStyle(color: Colors.grey.shade600, fontSize: 16)),
             );
           }
@@ -82,8 +82,8 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> {
               ],
             ),
             const SizedBox(height: 12),
-            _buildDetailRow(Icons.business, "Medical Center", appointment.centerName),
-            _buildDetailRow(Icons.calendar_today, "Requested", 
+            _buildDetailRow(Icons.business, "Medical Center".tr, appointment.centerName),
+            _buildDetailRow(Icons.calendar_today, "Requested".tr, 
               "${appointment.requestedAt.toLocal().day}/${appointment.requestedAt.toLocal().month}/${appointment.requestedAt.toLocal().year}"),
             const SizedBox(height: 8),
             Align(
@@ -269,10 +269,10 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> {
 
   String _getStatusText(int status) {
     switch (status) {
-      case 0: return "Pending";
-      case 1: return "Approved";
-      case 2: return "Rejected";
-      default: return "Unknown";
+      case 0: return "Pending".tr;
+      case 1: return "Approved".tr;
+      case 2: return "Rejected".tr;
+      default: return "Unknown".tr;
     }
   }
 

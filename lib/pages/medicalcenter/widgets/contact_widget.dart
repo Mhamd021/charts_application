@@ -4,6 +4,7 @@ import 'package:charts_application/pages/medicalcenter/widgets/social_media_widg
 import 'package:flutter/material.dart';
 import 'package:charts_application/constants/dimensions.dart';
 import 'package:charts_application/models/medical_center_details_model.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 
 class ContactInformationWidget extends StatelessWidget {
@@ -18,14 +19,14 @@ class ContactInformationWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Contact Information",
+            "Contact Information".tr,
             style: TextStyle(fontSize: Dimensions.font16(context) + 2, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: Dimensions.height15(context) - 3),
-          InfoRowWidget(label: "Phone", value: medicalCenter.medicalCentersPhoneNumber),
-          InfoRowWidget(label: "Email", value: medicalCenter.medicalCentersEmail),
+          InfoRowWidget(label: "Phone".tr, value: medicalCenter.medicalCentersPhoneNumber),
+          InfoRowWidget(label: "Email".tr, value: medicalCenter.medicalCentersEmail),
           if (medicalCenter.whatsAppNumber != null)
-            InfoRowWidget(label: "WhatsApp", value: medicalCenter.whatsAppNumber),
+            InfoRowWidget(label: "WhatsApp".tr, value: medicalCenter.whatsAppNumber),
           SizedBox(height: Dimensions.height15(context) - 3),
           SocialMediaRowWidget(medicalCenter: medicalCenter),
         ],

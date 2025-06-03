@@ -23,8 +23,8 @@ static const String medicalCenterDetails = "/medical_center_details_page";
   static List<GetPage> routes = 
   [       
           GetPage(name: home, page: ()=>const HomePage() ,transition: Transition.zoom),
-          GetPage(name:signIn, page: ()=>const SigninPage(),transition: Transition.rightToLeftWithFade,    transitionDuration: const Duration(milliseconds: 400),),
-          GetPage(name:signUp, page: ()=> const SignupPage(),transition: Transition.leftToRightWithFade   , transitionDuration: const Duration(milliseconds: 400),),
+          GetPage(name:signIn, page: ()=>const SigninPage(),transition: Transition.rightToLeft,    transitionDuration: const Duration(milliseconds: 400),),
+          GetPage(name:signUp, page: ()=> const SignupPage(),transition: Transition.leftToRight   , transitionDuration: const Duration(milliseconds: 400),),
            
           
           

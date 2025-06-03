@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:charts_application/constants/dimensions.dart';
 import 'package:charts_application/models/medical_center_details_model.dart';
+import 'package:get/get.dart';
 
 class TitleSectionWidget extends StatelessWidget {
   final MedicalCenterDetailsModel medicalCenter;
@@ -13,7 +14,7 @@ class TitleSectionWidget extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            medicalCenter.medicalCentersName ?? "Medical Center",
+            medicalCenter.medicalCentersName ?? "Medical Center".tr,
             style: TextStyle(
               fontSize: Dimensions.font26(context) + 2,
               fontWeight: FontWeight.bold,
@@ -24,7 +25,7 @@ class TitleSectionWidget extends StatelessWidget {
           Chip(
             backgroundColor: Colors.blue[50],
             label: Text(
-              medicalCenter.category ?? "General",
+              medicalCenter.category ?? "General".tr,
               style: TextStyle(
                 color: Colors.blue[800],
                 fontWeight: FontWeight.w500,

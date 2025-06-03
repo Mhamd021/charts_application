@@ -1,5 +1,7 @@
+import 'package:charts_application/constants/app_consts.dart';
 import 'package:charts_application/constants/dimensions.dart';
 import 'package:charts_application/controllers/postcontroller.dart';
+import 'package:charts_application/helper/image_helper.dart';
 import 'package:charts_application/models/Post.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -62,6 +64,7 @@ class _MedicalCenterPostsPageState extends State<MedicalCenterPostsPage> {
   }
 
   Widget _buildPostItem(Post post, BuildContext context) {
+      String imageUrl = ImageHelper.getValidImageUrl(post.imageUrl);
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Dimensions.width20(context),
@@ -100,7 +103,7 @@ class _MedicalCenterPostsPageState extends State<MedicalCenterPostsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(post.medicalCenter.medicalCentersName, style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(post.createdAt.toString(), style: TextStyle(color: Colors.grey, fontSize: 12)),
+                  Text(Appconsts.formatDate(post.createdAt), style: TextStyle(color: Colors.grey, fontSize: 12)),
                 ],
               ),
             ],
@@ -113,13 +116,12 @@ class _MedicalCenterPostsPageState extends State<MedicalCenterPostsPage> {
             child: Text(post.text, style: TextStyle(fontSize: Dimensions.font20(context) / 2 + 5))),
           SizedBox(height: Dimensions.width10(context) / 4),
 
-          // Post Image Section (if available)
-          post.imageUrl.isNotEmpty
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(Dimensions.radius15(context)),
-                  child: Image.network("https://doctormap.onrender.com${post.imageUrl}", fit: BoxFit.contain),
-                )
-              : const SizedBox(),
+          imageUrl.isNotEmpty
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(Dimensions.radius15(context)),
+                child: Image.network(imageUrl, fit: BoxFit.contain),
+              )
+            : const SizedBox(),
 
           SizedBox(height: Dimensions.height20(context)),
 

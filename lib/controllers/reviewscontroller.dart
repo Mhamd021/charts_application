@@ -10,14 +10,17 @@ class ReviewController extends GetxController {
   var reviews = <ReviewModel>[].obs;
   var averageRating = 0.0.obs;
   var isLoading = false.obs;
+
   final AuthController _authController = Get.find<AuthController>();
+
  void clearReviews() => reviews.clear();
   Future<void> getReviews(int medicalCenterId) async 
   {
+    final userId = await _authController.getUserId();
     try {
       isLoading.value = true;
       final response = await http.get(
-        Uri.parse("https://doctormap.onrender.com/api/Review/GetReviewsByMedicalCenter/$medicalCenterId"),
+        Uri.parse("https://doctormap.onrender.com/api/Review/GetReviewsByMedicalCenter/$medicalCenterId?UserId=$userId"),
         headers: {
           "User-Agent": Appconsts.useragent
           },
@@ -38,6 +41,7 @@ class ReviewController extends GetxController {
   }
 
   Future<void> getAverageRating(int medicalCenterId) async {
+
     try {
       final response = await http.get(
         Uri.parse("https://doctormap.onrender.com/api/Review/GetAverageRating/$medicalCenterId"),
@@ -92,7 +96,7 @@ class ReviewController extends GetxController {
     }
   }
 
-  Future<void> updateReview(int reviewId, int rating, String comment) async {
+  Future<void> updateReview(int reviewId, int rating, String comment,int medicalCenterId) async {
     try {
       final userId = await _authController.getUserId();
       final token = await _authController.storage.read(key: "access_token");
@@ -101,59 +105,68 @@ class ReviewController extends GetxController {
         Get.offNamed(RouteHelper.getSignIn());
       }
 
-      final response = await http.put(
-        Uri.parse("https://doctormap.onrender.com/api/Review/UpdateReview/$reviewId"),
+      final response = await http.post(
+        Uri.parse("https://doctormap.onrender.com/api/Review/UpdateReview"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
           "User-Agent": Appconsts.useragent,
         },
         body: jsonEncode({
-          "id" : reviewId,
+          "reviewId" : reviewId,
+           "userId" : userId,
           "rating": rating,
           "comment": comment,
-          "user_id" : userId,
-
         }),
+       
       );
 
-      if (response.statusCode == 200) {
-        final updatedReview = ReviewModel.fromJson(jsonDecode(response.body));
-        reviews[reviews.indexWhere((r) => r.id == reviewId)] = updatedReview;
-        getAverageRating(updatedReview.medicalCenterId);
-      } else {
-        
-            print(response.body);
-      }
-    } catch (e) {
- 
-      print(e);
-    }
-  }
 
-  Future<void> deleteReview(int reviewId, int medicalCenterId) async {
-    try {
-      final token = await _authController.storage.read(key: "access_token");
-      if (token == null) throw Exception("Login required.");
-
-      final response = await http.delete(
-        Uri.parse("https://doctormap.onrender.com/api/Review/DeleteReview/$reviewId"),
-        headers: {
-          "Authorization": "Bearer $token",
-          "User-Agent": Appconsts.useragent,
-        },
-      );
 
       if (response.statusCode == 200) {
-             reviews.removeWhere((r) => r.id == reviewId);
+        reviews[reviews.indexWhere((r) => r.id == reviewId)] ;
+        getReviews(medicalCenterId);
         getAverageRating(medicalCenterId);
-        print(response.body);
       } else {
         Get.snackbar("Failed", response.body);
-        print(response.body);
-      }
+              }
     } catch (e) {
-      Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.TOP);
+      Get.snackbar("Failed", e.toString());
     }
   }
+
+  Future<void> deleteReview(int reviewId, int medicalCenterId, String userReviewId) async {
+  try {
+    final token = await _authController.storage.read(key: "access_token");
+    final userId = await _authController.getUserId();
+
+    if (token == null) {
+      Get.offNamed(RouteHelper.getSignIn());
+      return;
+    }
+
+    if (userId.toString() != userReviewId) {
+      Get.snackbar("Unauthorized", "You can only delete your own reviews!");
+      return;
+    }
+
+    final response = await http.delete(
+      Uri.parse("https://doctormap.onrender.com/api/Review/DeleteReview?id=$reviewId&userId=$userId"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "User-Agent": Appconsts.useragent,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      reviews.removeWhere((r) => r.id == reviewId);
+      reviews.refresh();
+      getAverageRating(medicalCenterId);
+    } else {
+      Get.snackbar("Failed", response.body);
+    }
+  } catch (e) {
+    Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.TOP);
+  }
+}
 }

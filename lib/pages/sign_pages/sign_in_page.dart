@@ -51,7 +51,7 @@ class _SigninPageState extends State<SigninPage> {
           Get.offNamed(RouteHelper.getHome());
         } else {
           Get.snackbar(
-            "Failed",
+            "Failed".tr,
             status.message,
             backgroundColor: Colors.deepPurple,
             colorText: Colors.white,
@@ -66,7 +66,7 @@ class _SigninPageState extends State<SigninPage> {
     authController.authGoogleSignIn().then((status) {
       if (status.isSuccess == true) {
         Get.snackbar(
-          "Success",
+          "Success".tr,
           status.message,
           backgroundColor: Colors.lightBlueAccent,
           colorText: Colors.white,
@@ -74,9 +74,8 @@ class _SigninPageState extends State<SigninPage> {
         );
       } else {
         Get.snackbar(
-          "Failed",
+          "Failed".tr,
           status.message,
-          backgroundColor: Colors.deepPurple,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,
         );
@@ -115,8 +114,8 @@ class _SigninPageState extends State<SigninPage> {
               SizedBox(height: Dimensions.height30(context) * 2),
 
               // Optional Welcome Message
-              const Text(
-                "Welcome Back!",
+               Text(
+                "welcome".tr,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: Dimensions.height30(context)),
@@ -130,12 +129,12 @@ class _SigninPageState extends State<SigninPage> {
                   icon: Icons.email_outlined,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return "Email is required";
+                      return "Email is required".tr;
                     }
                     if (!RegExp(
                       r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
                     ).hasMatch(value)) {
-                      return "Invalid email format";
+                      return "Invalid email format".tr;
                     }
                     return null;
                   },
@@ -154,22 +153,22 @@ class _SigninPageState extends State<SigninPage> {
   isObs: true,
   validator: (value) {
     if (value == null || value.trim().isEmpty) {
-      return "Password is required";
+      return "Password is required".tr;
     }
     if (value.trim().length < 8) {
-      return "Password must be at least 8 characters";
+      return "Password must be at least 8 characters".tr;
     }
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return "Password must contain at least 1 uppercase letter";
+      return "Password must contain at least 1 uppercase letter".tr;
     }
     if (!RegExp(r'[a-z]').hasMatch(value)) {
-      return "Password must contain at least 1 lowercase letter";
+      return "Password must contain at least 1 lowercase letter".tr;
     }
     if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return "Password must contain at least 1 number";
+      return "Password must contain at least 1 number".tr;
     }
     if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
-      return "Password must contain at least 1 special character";
+      return "Password must contain at least 1 special character".tr;
     }
     return null;
   },
@@ -188,15 +187,15 @@ class _SigninPageState extends State<SigninPage> {
                     onPressed: () {
                       // Handle forgot password action here.
                     },
-                    child: const Text(
-                      "Forgot Password?",
+                    child:  Text(
+                      "Forgot Password?".tr,
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),
                 ),
               ),
 
-              SizedBox(height: Dimensions.height30(context)),
+              SizedBox(height: Dimensions.height30(context)/2),
 
               // Sign In Button using authController.isLoading
           Obx(
@@ -215,13 +214,13 @@ class _SigninPageState extends State<SigninPage> {
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: authController.isLoading.value
-              ? const CircularProgressIndicator(
-                  key: ValueKey("loading"),
+              ?  CircularProgressIndicator(
+                  key: ValueKey("loading".tr),
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 )
               : Text(
-                  "Sign In",
-                  key: const ValueKey("signIn"),
+                  "Sign In".tr,
+                  key:  ValueKey("signIn".tr),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: Dimensions.font16(context),
@@ -247,8 +246,8 @@ class _SigninPageState extends State<SigninPage> {
                     onTap: () {
                       Get.offNamed(RouteHelper.getSignUp());
                     },
-                    child: const Text(
-                      "Don't have an account?",
+                    child:  Text(
+                      "Don't have an account?".tr,
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.w500,

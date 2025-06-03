@@ -57,11 +57,14 @@ class MedicalMapController extends GetxController {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
+        
         final details = MedicalCenterDetailsModel.fromJson(
           convert.jsonDecode(response.body),
         );
+
         cachedCentersDetails[medicalCentersId] = details;
         selectedCenter.value = details;
+        cachedCentersDetails.refresh();
       } else {
         errorMessage(
           "Failed to fetch details (Status ${response.statusCode}).",

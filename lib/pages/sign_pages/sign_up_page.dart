@@ -1,11 +1,11 @@
-import 'package:charts_application/widgets/shake_widget.dart';
-import 'package:charts_application/widgets/text_field2_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:charts_application/constants/dimensions.dart';
 import 'package:charts_application/controllers/auth_controller.dart';
+import 'package:charts_application/helper/route_helper.dart';
 import 'package:charts_application/widgets/google_button.dart';
-import '../../helper/route_helper.dart';
+import 'package:charts_application/widgets/shake_widget.dart';
+import 'package:charts_application/widgets/text_field_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -15,21 +15,13 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  // Global key for the form.
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<ShakeWidgetState> passwordshakekey = GlobalKey<ShakeWidgetState>();
-    final GlobalKey<ShakeWidgetState> emailshakekey = GlobalKey<ShakeWidgetState>();
+  final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  final GlobalKey<ShakeWidgetState> nameshakekey = GlobalKey<ShakeWidgetState>();
-    final GlobalKey<ShakeWidgetState> confirmpasswordshakekey = GlobalKey<ShakeWidgetState>();
-
-
-  // Controllers for each text field.
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmController =
-      TextEditingController();
+  final GlobalKey<ShakeWidgetState> shakeKey = GlobalKey<ShakeWidgetState>();
 
   late AuthController authController;
 
@@ -41,29 +33,30 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   void dispose() {
-    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    passwordConfirmController.dispose();
+    nameController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void google() {
-    authController.authGoogleSignIn().then((status) {
+  void register() {
+    if (!_formKey.currentState!.validate()) {
+      shakeKey.currentState?.shake();
+      return;
+    }
+
+    String name = nameController.text.trim();
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    authController.register(name, email, password).then((status) {
       if (status.isSuccess == true) {
-        Get.snackbar(
-          "Success",
-          status.message,
-          backgroundColor: Colors.lightBlueAccent,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
-        Get.toNamed(RouteHelper.getHome());
+        Get.offNamed(RouteHelper.getSignIn());
       } else {
         Get.snackbar(
-          "Failed",
+          "Failed".tr,
           status.message,
-          backgroundColor: Colors.deepPurple,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,
         );
@@ -71,296 +64,182 @@ class _SignupPageState extends State<SignupPage> {
     });
   }
 
- void register() {
-
-  if (!_formKey.currentState!.validate()) {
-    passwordshakekey.currentState?.shake();
-    emailshakekey.currentState?.shake();
-    nameshakekey.currentState?.shake();
-    confirmpasswordshakekey.currentState?.shake();
-    return; 
+  void google() {
+    authController.authGoogleSignIn().then((status) {
+      if (status.isSuccess == true) {
+        Get.toNamed(RouteHelper.getHome());
+      } else {
+        Get.snackbar(
+          "Failed".tr,
+          status.message,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
+      }
+    });
   }
-
-  String name = nameController.text.trim();
-  String email = emailController.text.trim();
-  String password = passwordController.text.trim();
-
-  authController.register(name, email, password).then((status) {
-    if (status.isSuccess == true) {
-      Get.snackbar(
-        "Success",
-        status.message,
-        backgroundColor: Colors.lightBlueAccent,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
-      Get.offNamed(RouteHelper.getSignIn());
-    } else {
-      Get.snackbar(
-        "Failed",
-        status.message,
-        backgroundColor: Colors.deepPurple,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
-    }
-  });
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          ClipPath(
-            clipper: CurvedClipper(), 
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.35,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blue.shade400, Colors.blue.shade700],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Column(
+            children: [
+              SizedBox(height: Dimensions.height30(context) * 4),
+
+              // App Logo
+              Center(
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: Dimensions.radius15(context) * 5,
+                  backgroundImage: const AssetImage("assets/image/app_logo.png"),
                 ),
               ),
-              child: Center(
+
+              SizedBox(height: Dimensions.height20(context)),
+
+               Text(
+                "Create Account".tr,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+
+              SizedBox(height: Dimensions.height30(context)),
+
+              ShakeWidget(
+                key: shakeKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 50,
-                      backgroundImage: const AssetImage(
-                        "assets/image/app_logo.png",
-                      ),
+                    AppTextField(
+                      textController: nameController,
+                      hintText: "Full Name".tr,
+                      icon: Icons.person,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Name is required".tr;
+                        }
+                        return null;
+                      },
                     ),
-                    SizedBox(height: Dimensions.height10(context)),
-                    Text(
-                      "GeoClinic",
-                      style: TextStyle(
-                        fontSize: Dimensions.font20(context) + 4,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SizedBox(height: Dimensions.height20(context)),
+                    AppTextField(
+                      textController: emailController,
+                      hintText: "user@example.com",
+                      icon: Icons.email_outlined,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Email is required".tr;
+                        }
+                        if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$").hasMatch(value)) {
+                          return "Invalid email format".tr;
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: Dimensions.height20(context)),
+                    AppTextField(
+                      textController: passwordController,
+                      hintText: "*********",
+                      icon: Icons.password,
+                      isObs: true,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Password is required".tr;
+                        }
+                        if (!RegExp(r'[A-Z]').hasMatch(value)) return "Must have at least 1 uppercase letter".tr;
+                        if (!RegExp(r'[a-z]').hasMatch(value)) return "Must have at least 1 lowercase letter".tr;
+                        if (!RegExp(r'[0-9]').hasMatch(value)) return "Must have at least 1 number".tr;
+                        if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) return "Must have at least 1 special character".tr;
+                        if (value.trim().length < 8) return "Password must be at least 8 characters".tr;
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: Dimensions.height20(context)),
+                    AppTextField(
+                      textController: confirmPasswordController,
+                      hintText: "Confirm Password".tr,
+                      icon: Icons.key,
+                      isObs: true,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Please confirm your password".tr;
+                        }
+                        if (value != passwordController.text) {
+                          return "Passwords do not match".tr;
+                        }
+                        return null;
+                      },
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-          // Sign-up form card.
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(
-                20,
-                MediaQuery.of(context).size.height * 0.30,
-                20,
-                20,
-              ),
-              child: Card(
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    Dimensions.radius30(context),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Form(
-                    key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Column(
-                      children: [
-                        ShakeWidget(
-                          key: nameshakekey,
-                          child: CustomTextField(
-                            controller: nameController,
-                            labelText: "Username",
-                            prefixIcon: Icons.person,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return "Name is required";
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        SizedBox(height: Dimensions.height20(context)),
-                        ShakeWidget(
-                          key: emailshakekey,
-                          child: CustomTextField(
-                            controller: emailController,
-                            labelText: "Email",
-                            prefixIcon: Icons.email_outlined,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return "Email is required";
-                              }
-                              RegExp emailRegex = RegExp(
-                                r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-                              );
-                              if (!emailRegex.hasMatch(value)) {
-                                return "Invalid email format";
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
 
-                        SizedBox(height: Dimensions.height20(context)),
-                       ShakeWidget(
-                        key: passwordshakekey,
-                         child: CustomTextField(
-                           controller: passwordController,
-                           labelText: "Password",
-                           prefixIcon: Icons.password,
-                           isPassword: true, // enable password-specific functionality
-                           validator: (value) {
-                             if (value == null || value.trim().isEmpty) {
-                               return "Password is required";
-                             }
-                           
-                             if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                               return "Password must contain at least 1 uppercase letter";
-                             }
-                             if (!RegExp(r'[a-z]').hasMatch(value)) {
-                               return "Password must contain at least 1 lowercase letter";
-                             }
-                             if (!RegExp(r'[0-9]').hasMatch(value)) {
-                               return "Password must contain at least 1 number";
-                             }
-                             if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
-                               return "Password must contain at least 1 special character";
-                             }
-                               if (value.trim().length < 8) {
-                               return "Password must be at least 8 characters";
-                             }
-                             return null;
-                           },
-                         ),
-                       ),
+              SizedBox(height: Dimensions.height30(context)),
 
-                        SizedBox(height: Dimensions.height20(context)),
-                        ShakeWidget(
-                          key:confirmpasswordshakekey,
-                          child: CustomTextField(
-                            controller: passwordConfirmController,
-                            labelText: "Confirm Password",
-                            prefixIcon: Icons.key,
-                            isPassword: true,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return "Please confirm your password";
-                              }
-                              if (value != passwordController.text) {
-                                return "Passwords do not match";
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        SizedBox(height: Dimensions.height30(context)),
-                        Obx(
-  () => InkWell(
-    onTap: authController.isLoading.value ? null : register,
-    borderRadius: BorderRadius.circular(Dimensions.radius30(context)),
-    child: AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      width: double.infinity,
-      height: Dimensions.screenHeight(context) / 17,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Dimensions.radius30(context)),
-        color: Colors.blue.shade500,
-      ),
-      child: Center(
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: authController.isLoading.value
-              ? const CircularProgressIndicator(
-                  key: ValueKey("loading"),
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                )
-              : Text(
-                  "Sign Up",
-                  key: const ValueKey("signUp"),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: Dimensions.font16(context),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-        ),
-      ),
-    ),
-  ),
-)
-,
-                        SizedBox(height: Dimensions.height20(context)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GoogleSignInButton(onPressed: google),
-                            SizedBox(width: Dimensions.width10(context)),
-                            GestureDetector(
-                              onTap: () {
-                                Get.offNamed(RouteHelper.getSignIn());
-                              },
-                              child: const Text(
-                                "Already have an account?",
+              // Sign Up Button with loading animation
+              Obx(
+                () => InkWell(
+                  onTap: authController.isLoading.value ? null : register,
+                  borderRadius: BorderRadius.circular(Dimensions.radius30(context)),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                         width: Dimensions.screenWidth(context) / 2,
+                        height: Dimensions.screenHeight(context) / 15,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Dimensions.radius30(context)),
+                      color: Colors.blue.shade500,
+                    ),
+                    child: Center(
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: authController.isLoading.value
+                            ?  CircularProgressIndicator(
+                                key: ValueKey("loading".tr),
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              )
+                            : Text(
+                                "Sign Up".tr,
+                                key: const ValueKey("signUp"),
                                 style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w500,
-                                  
+                                  color: Colors.white,
+                                  fontSize: Dimensions.font16(context),
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+
+              SizedBox(height: Dimensions.height20(context)),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GoogleSignInButton(onPressed: google),
+                  SizedBox(width: Dimensions.width15(context)),
+                  GestureDetector(
+                    onTap: () {
+                      Get.offNamed(RouteHelper.getSignIn());
+                    },
+                    child:  Text(
+                      "Already have an account?".tr,
+                      style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: Dimensions.height30(context)),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
-}
-
-class CurvedClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    // Start at the top left corner
-    path.lineTo(0, size.height - 50);
-    // First curve
-    var firstControlPoint = Offset(size.width / 4, size.height);
-    var firstEndPoint = Offset(size.width / 2, size.height);
-    path.quadraticBezierTo(
-      firstControlPoint.dx,
-      firstControlPoint.dy,
-      firstEndPoint.dx,
-      firstEndPoint.dy,
-    );
-    // Second curve
-    var secondControlPoint = Offset(3 * size.width / 4, size.height);
-    var secondEndPoint = Offset(size.width, size.height - 50);
-    path.quadraticBezierTo(
-      secondControlPoint.dx,
-      secondControlPoint.dy,
-      secondEndPoint.dx,
-      secondEndPoint.dy,
-    );
-    // Complete the path
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

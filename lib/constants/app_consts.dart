@@ -1,4 +1,7 @@
 class Appconsts {
+static  String formatDate(DateTime date) => 
+    "${date.day.toString().padLeft(2,'0')}/${date.month.toString().padLeft(2,'0')}/${date.year}";
+
   static const String appUri = 'https://doctormap.onrender.com';
   static const String registeration = '/api/Auth/register';
   static const String login = '/api/Auth/login';

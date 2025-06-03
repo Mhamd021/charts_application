@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:charts_application/controllers/auth_controller.dart';
 import 'package:charts_application/models/reviews_model.dart';
 import 'package:charts_application/pages/medicalcenter/widgets/shadow_container_widget.dart';
 import 'package:flutter/material.dart';
@@ -9,20 +10,22 @@ import 'package:charts_application/controllers/reviewscontroller.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ReviewsSectionWidget extends StatelessWidget {
-   final int _visibleReviewsCount = 3;
+  final int _visibleReviewsCount = 3;
   final RxInt _expandedReviews = 0.obs;
   final TextEditingController _commentController = TextEditingController();
   final RxInt _selectedRating = 0.obs;
-   final RxBool _isEditing = false.obs;
+  final RxBool _isEditing = false.obs;
   final RxInt _editingReviewId = (-1).obs;
   final int medicalCenterId;
   final ReviewController reviewController = Get.put(ReviewController());
+  final AuthController authController = Get.find<AuthController>();
+  
 
   ReviewsSectionWidget({super.key, required this.medicalCenterId});
 
   @override
   Widget build(BuildContext context) {
-     
+
     return Obx(() {
       if (reviewController.isLoading.value) {
         return _buildSkeletonLoader(context); 
@@ -31,8 +34,24 @@ class ReviewsSectionWidget extends StatelessWidget {
       if (reviewController.reviews.isEmpty) 
       {
         return ShadowedContainerWidget(
-          child: const Center(
-            child: Text("No reviews yet. Be the first to leave one!"),
+          child:  Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () 
+                {
+                  _showReviewDialog(context);
+                },
+                child: Text(
+                  "No reviews yet.click and be the first to leave one!",
+                  style: TextStyle
+                  (
+                    color: Colors.blue
+                  ),
+                  
+                  ),
+              ),
+            ),
           ),
         );
       }
@@ -58,8 +77,10 @@ class ReviewsSectionWidget extends StatelessWidget {
           .map((review) => _buildReviewCard(review, context)),
         if (reviewController.reviews.length > _visibleReviewsCount )
           TextButton(
-            onPressed: () => _expandedReviews.value > 0 ? 0 : reviewController.reviews.length,
-            child: Text(_expandedReviews.value > 0 
+          onPressed: () => _expandedReviews.value = _expandedReviews.value > 0 
+          ? 0 
+          : reviewController.reviews.length,
+                child: Text(_expandedReviews.value > 0 
               ? "Show Less" 
               : "Show More (${reviewController.reviews.length - _visibleReviewsCount})"),
         ),
@@ -71,8 +92,10 @@ class ReviewsSectionWidget extends StatelessWidget {
       );
     });
   }
+
       Widget _buildAddReviewButton(BuildContext context) {
     return FloatingActionButton(
+      heroTag: 'addReview_$medicalCenterId',
       mini: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -83,6 +106,7 @@ class ReviewsSectionWidget extends StatelessWidget {
   }
 
  Widget _buildReviewCard(ReviewModel review,BuildContext context) {
+    
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -154,19 +178,26 @@ class ReviewsSectionWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                                  PopupMenuButton(
-    itemBuilder: (context) => [
-      PopupMenuItem(
-        child: Text("Edit"),
-        onTap: () => _showReviewDialog(context, existingReview: review),
+            
+      Visibility(
+        visible: review.userId == authController.userId.value,
+        child: PopupMenuButton(
+                            itemBuilder: (context) => [
+        PopupMenuItem(
+          child: Text("Edit"),
+          onTap: () => _showReviewDialog(context, existingReview: review),
+        ),
+        
+        
+        PopupMenuItem(
+          child: Text("Delete"),
+          onTap: () => reviewController.deleteReview(review.id, medicalCenterId, review.userId),
+        ),
+            ],
+            ),
       ),
-      PopupMenuItem(
-        child: Text("Delete"),
-        onTap: () => reviewController.deleteReview(review.id, medicalCenterId),
-      ),
-    ],
-  ),
-                ],
+    
+    ] ,
               ),
               
               // Review Comment
@@ -198,74 +229,178 @@ class ReviewsSectionWidget extends StatelessWidget {
       )),
     );
   }
- void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
-    if (existingReview != null) {
-      _commentController.text = existingReview.comment;
-      _selectedRating.value = existingReview.rating;
-      _editingReviewId.value = existingReview.id;
-      _isEditing.value = true;
-    }
+//  void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
+//     if (existingReview != null) {
+//       _commentController.text = existingReview.comment;
+//       _selectedRating.value = existingReview.rating;
+//       _editingReviewId.value = existingReview.id;
+//       _isEditing.value = true;
+//     }
     
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(_isEditing.value ? "Edit Review" : "Add Review"),
-        content: Column(
+//     showDialog(
+//       context: context,
+//       builder: (context) => AlertDialog(
+//         title: Text(_isEditing.value ? "Edit Review" : "Add Review"),
+//         content: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Obx(() => Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: List.generate(5, (index) => IconButton(
+//                 icon: Icon(Icons.star,
+//                   color: index < _selectedRating.value ? Colors.amber : Colors.grey,
+//                   size: Dimensions.font16(context) + 8),
+//                 onPressed: () => _selectedRating.value = index + 1,
+//               )),
+//             )),
+//             SizedBox(height: Dimensions.height10(context)),
+//             TextField(
+//               controller: _commentController,
+//               maxLines: 3,
+//               decoration: InputDecoration(
+//                 hintText: "Write your review...",
+//                 border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//         actions: [
+//           TextButton(
+//             onPressed: () => Navigator.pop(context),
+//             child: Text("Cancel"),
+//           ),
+//           ElevatedButton(
+//             onPressed: () async {
+//               if (_selectedRating.value > 0) {
+//                 if (_isEditing.value) {
+//                   await reviewController.updateReview(
+                    
+//                     _editingReviewId.value,
+//                     _selectedRating.value,
+//                     _commentController.text,
+//                     medicalCenterId
+//                   );
+//                 } else {
+//                   await reviewController.addReview(
+//                     medicalCenterId,
+//                     _selectedRating.value,
+//                     _commentController.text,
+//                   );
+//                 }
+//                 _resetDialogState();
+//                 Navigator.pop(context);
+//               }
+//             },
+//             child: Text(_isEditing.value ? "Update" : "Submit"),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
+  if (existingReview != null) {
+    _commentController.text = existingReview.comment;
+    _selectedRating.value = existingReview.rating;
+    _editingReviewId.value = existingReview.id;
+    _isEditing.value = true;
+  }
+
+  Get.dialog(
+    Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Dimensions.radius15(context)),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(Dimensions.width15(context) + 2),
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Dialog Title
+            Text(
+              _isEditing.value ? "Edit Review" : "Add Review",
+              style: TextStyle(
+                fontSize: Dimensions.font20(context),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: Dimensions.height10(context)),
+
+            // Star Rating Selection
             Obx(() => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(5, (index) => IconButton(
                 icon: Icon(Icons.star,
-                  color: index < _selectedRating.value ? Colors.amber : Colors.grey,
-                  size: Dimensions.font16(context) + 8),
+                    color: index < _selectedRating.value ? Colors.amber : Colors.grey,
+                    size: Dimensions.font16(context) + 6),
                 onPressed: () => _selectedRating.value = index + 1,
               )),
             )),
             SizedBox(height: Dimensions.height10(context)),
+
+            // Comment Input
             TextField(
               controller: _commentController,
               maxLines: 3,
               decoration: InputDecoration(
                 hintText: "Write your review...",
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(Dimensions.radius15(context) - 2),
                 ),
               ),
             ),
+            SizedBox(height: Dimensions.height15(context)),
+
+            // Action Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(color: Colors.red, fontSize: Dimensions.font16(context)),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_selectedRating.value > 0) {
+                      if (_isEditing.value) {
+                        await reviewController.updateReview(
+                          _editingReviewId.value,
+                          _selectedRating.value,
+                          _commentController.text,
+                          medicalCenterId,
+                        );
+                      } else {
+                        await reviewController.addReview(
+                          medicalCenterId,
+                          _selectedRating.value,
+                          _commentController.text,
+                        );
+                      }
+                      _resetDialogState();
+                      Get.back(); // Close the dialog
+                    }
+                  },
+                  child: Text(
+                    _isEditing.value ? "Update" : "Submit",
+                    style: TextStyle(fontSize: Dimensions.font16(context)),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (_selectedRating.value > 0) {
-                if (_isEditing.value) {
-                  await reviewController.updateReview(
-                    _editingReviewId.value,
-                    _selectedRating.value,
-                    _commentController.text,
-                  );
-                } else {
-                  await reviewController.addReview(
-                    medicalCenterId,
-                    _selectedRating.value,
-                    _commentController.text,
-                  );
-                }
-                _resetDialogState();
-                Navigator.pop(context);
-              }
-            },
-            child: Text(_isEditing.value ? "Update" : "Submit"),
-          ),
-        ],
       ),
-    );
-  }
+    ),
+    transitionCurve: Curves.easeInOut,
+    transitionDuration: const Duration(milliseconds: 300),
+    barrierColor: Colors.black.withOpacity(0.3),
+  );
+}
+
    void _resetDialogState() {
     _commentController.clear();
     _selectedRating.value = 0;

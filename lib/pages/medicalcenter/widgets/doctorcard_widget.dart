@@ -1,4 +1,5 @@
 import 'package:charts_application/constants/dimensions.dart';
+import 'package:charts_application/helper/image_helper.dart';
 import 'package:charts_application/models/medical_center_details_model.dart';
 import 'package:flutter/material.dart';
 
@@ -6,9 +7,10 @@ class DoctorCard extends StatelessWidget {
   final Doctor doctor;
   
   const DoctorCard({super.key, required this.doctor});
-
+  
   @override
   Widget build(BuildContext context) {
+      String imageUrl = ImageHelper.getValidImageUrl(doctor.profileImageUrl);
     return Container(
       padding:  EdgeInsets.all(Dimensions.width15(context)),
       decoration: BoxDecoration(
@@ -22,7 +24,9 @@ class DoctorCard extends StatelessWidget {
           ),
         ],
       ),
+      
       child: Row(
+        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -37,16 +41,16 @@ class DoctorCard extends StatelessWidget {
                     spreadRadius: 2,
                   ),
                 ],
-              image: doctor.profileImageUrl != null
-                  ? DecorationImage(
-                      image: NetworkImage("https://doctormap.onrender.com${doctor.profileImageUrl}"),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
-            ),
-            child: doctor.profileImageUrl == null
-                ?  Icon(Icons.person, size: Dimensions.width45(context)-5, color: Colors.grey)
+              image: imageUrl.isNotEmpty 
+                ? DecorationImage(
+                    image: NetworkImage(imageUrl),
+                    fit: BoxFit.cover,
+                  )
                 : null,
+          ),
+          child: imageUrl.isEmpty 
+              ? Icon(Icons.person, size: Dimensions.width45(context) - 5, color: Colors.grey)
+              : null,
           ),
            SizedBox(width: Dimensions.width15(context)),
           Expanded(

@@ -1,3 +1,4 @@
+import 'package:charts_application/helper/image_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:charts_application/controllers/appointment_controller.dart';
@@ -34,8 +35,10 @@ class DoctorSelectionDialog extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children:
+                  
                       medicalCenter.doctors!.map((doctor) {
                         return Obx(() {
+                            
                           final isSelected =
                               bookController.selectedDoctor.value == doctor;
                           return GestureDetector(
@@ -77,6 +80,7 @@ class DoctorSelectionDialog extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Obx(() {
+                                    String imageUrl = ImageHelper.getValidImageUrl(doctor.profileImageUrl);
                                     return TweenAnimationBuilder<double>(
                                       tween: Tween(begin: 0, end: bookController.isLoading.value ? 2 * 3.14 : 0),
                                       duration: Duration(
@@ -93,22 +97,14 @@ class DoctorSelectionDialog extends StatelessWidget {
                                           child: child!,
                                         );
                                       },
-                                      child: CircleAvatar(
-                                        backgroundImage:
-                                            doctor.profileImageUrl != null
-                                                ? NetworkImage(
-                                                  "https://doctormap.onrender.com${doctor.profileImageUrl}",
-                                                )
-                                                : null,
-                                        child:
-                                            doctor.profileImageUrl == null
-                                                ? const Icon(
-                                                  Icons.person,
-                                                  size: 40,
-                                                  color: Colors.grey,
-                                                )
-                                                : null,
-                                      ),
+                                     child: CircleAvatar(
+      backgroundImage: imageUrl.isNotEmpty // ✅ Check if image URL is valid
+          ? NetworkImage(imageUrl)
+          : null,
+      child: imageUrl.isEmpty // ✅ Fallback when no valid image
+          ? const Icon(Icons.person, size: 40, color: Colors.grey)
+          : null,
+    ),
                                     );
                                   }),
                                   SizedBox(
@@ -172,7 +168,7 @@ class DoctorSelectionDialog extends StatelessWidget {
                     onPressed:
                         bookController.selectedDoctor.value != null
                             ? () => _confirmAppointment(
-                              medicalCenter.medicalCentersId!,
+                              2,
                             )
                             : null,
                     style: ElevatedButton.styleFrom(
@@ -209,6 +205,10 @@ class DoctorSelectionDialog extends StatelessWidget {
   void _confirmAppointment(int medicalCenterId) {
     final BookAppointmentController bookController =
         Get.find<BookAppointmentController>();
+      if (bookController.selectedDoctor.value == null) {
+    Get.snackbar("Error", "Please select a doctor and try again.");
+    return;
+  }
 
     if (bookController.selectedDoctor.value != null) {
       bookController.createAppointment(

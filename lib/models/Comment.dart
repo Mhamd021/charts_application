@@ -1,58 +1,29 @@
 class Comment {
-int id ;
-int userId;
-int postId;
-String commentInfo;
-String? commentImage;
-String createdAt;
-String updatedAt;
-User user;
+  final int commentId;
+  final int postId;
+  final String userId;
+  final String commentText;
+  final String userName;
 
   Comment({
-  required this.id,
-  required this.userId,
-  required this.postId,
-  required this.commentInfo,
-  this.commentImage,
-  required this.createdAt,
-  required this.updatedAt,
-  required this.user,
+    required this.commentId,
+    required this.postId,
+    required this.userId,
+    required this.commentText,
+    required this.userName,
+  });
 
-
-
-});
-
-factory Comment.fromJson(Map<String,dynamic> json)
-{
-  return Comment 
-  (
-    id : json['id'],
-    userId: json['user_id'],
-    postId: json['post_id'],
-    commentInfo: json['comment_info'],
-    commentImage: json['comment_image'],
-    createdAt: json['created_at'],
-    updatedAt: json['updated_at'],
-    user: User.fromJson(json['user'])
-
+  factory Comment.fromJson(Map<String, dynamic> json) {
+  return Comment(
+    commentId: json['commentId'] ?? 0, // Ensure numeric default
+    postId: json['postId'] ?? 0,
+    userId: json['userId'] ?? '',
+    commentText: json['commentText'] ?? '', // 🔥 Prevent null errors
+    userName: json['userName'] ?? 'Unknown', // 🔥 Default if missing
   );
 }
 
-}
-
-
-class User 
-{
-  int id ;
-  String name;
-  String? userImage;
-   User({required this.id, required this.name, this.userImage});
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'],
-      name: json['name'],
-      userImage: json['user_image'] ?? '', 
-    );
+  static List<Comment> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((json) => Comment.fromJson(json)).toList();
   }
 }

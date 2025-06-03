@@ -22,6 +22,7 @@ class PostsSkeleton extends StatelessWidget {
             ),
           ],
         ),
+
         padding: EdgeInsets.all(Dimensions.radius15(context)),
         child: Shimmer.fromColors(
           baseColor: Colors.grey.shade300,
@@ -31,7 +32,7 @@ class PostsSkeleton extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  // Avatar Placeholder with Circular Shape
+                  
                   Container(
                     width: Dimensions.width30(context) + Dimensions.width20(context),
                     height: Dimensions.height30(context) + Dimensions.height20(context),
@@ -101,8 +102,6 @@ class PostsSkeleton extends StatelessWidget {
                 ),
               ),
               SizedBox(height: Dimensions.height10(context) + 2),
-
-              // Likes & Comments Placeholder
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

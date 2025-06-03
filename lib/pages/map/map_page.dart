@@ -18,11 +18,11 @@ class MapPageGetX extends StatefulWidget {
 class _MapPageGetXState extends State<MapPageGetX> with TickerProviderStateMixin {
   final apiController = Get.find<MedicalMapController>();
   final MapController leafletMapController = MapController();
-  late String selectedCountry = 'UAE';
+  late String selectedCountry = 'UAE'.tr;
   late LatLng _lastCenter;
   double _lastZoom = 5.0;
 
-  final List<String> countries = ['Germany', 'Syria', 'UAE'];
+  final List<String> countries = ['Germany'.tr, 'Syria'.tr, 'UAE'.tr];
 
   final Map<String, LatLng> countryCenter = {
     'Germany': LatLng(51.165691, 10.451526),
@@ -37,7 +37,6 @@ class _MapPageGetXState extends State<MapPageGetX> with TickerProviderStateMixin
     apiController.getMedicalCenters();
   }
 
-  /// Animates smooth transition when changing countries
   void animateMapMove(LatLng destCenter, double destZoom) {
     final latTween = Tween<double>(begin: _lastCenter.latitude, end: destCenter.latitude);
     final lngTween = Tween<double>(begin: _lastCenter.longitude, end: destCenter.longitude);
@@ -83,14 +82,14 @@ class _MapPageGetXState extends State<MapPageGetX> with TickerProviderStateMixin
               leafletMapController.move(userLocation, 15.0);
             }
           } catch (e) {
-            Get.snackbar("Error", e.toString());
+            Get.snackbar("Error".tr, e.toString());
           }
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.my_location, color: Colors.white),
       ),
       appBar: AppBar(
-        title: const Text("Medical Centers Map"),
+        title:  Text("Medical Centers".tr),
         backgroundColor: Colors.white,
         actions: [
           DropdownButton<String>(
@@ -159,7 +158,7 @@ class _MapPageGetXState extends State<MapPageGetX> with TickerProviderStateMixin
                                 }
                               }
                             } catch (e) {
-                              Get.snackbar("Error", e.toString());
+                              Get.snackbar("Error".tr, e.toString());
                             } finally {
                               apiController.isFetchingDetails(false);
                             }

@@ -1,7 +1,9 @@
 import 'package:charts_application/pages/appointments/user_appointments_page.dart';
 import 'package:charts_application/pages/map/map_page.dart';
 import 'package:charts_application/pages/posts/posts_page.dart';
+import 'package:charts_application/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:persistent_bottom_nav_bar_plus/persistent_bottom_nav_bar_plus.dart';
 
 
@@ -17,36 +19,37 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _buildScreens() {
     return [
-      const PostsPage(),
       const MapPageGetX(),
+      const FavoritePostsPage(),
       const UserAppointmentsPage(),
-      const PostsPage(),
+      const ProfilePage(),
     ];
   }
 
   List<PersistentBottomNavBarItem> _navBarItems() {
     return [
+     
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.post_add),
-        title: "Posts",
+        icon: const Icon(Icons.map),
+        title: "Map".tr,
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.grey,
       ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.map),
-        title: "Map",
+       PersistentBottomNavBarItem(
+        icon: const Icon(Icons.post_add),
+        title: "Posts".tr,
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.date_range),
-        title: "Appointments",
+        title: "Appointments".tr,
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.person),
-        title: "Profile",
+        title: "Profile".tr,
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.grey,
       ),

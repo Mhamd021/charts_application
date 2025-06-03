@@ -1,10 +1,12 @@
 import 'package:charts_application/constants/dimensions.dart';
+import 'package:charts_application/controllers/favorite_controller.dart';
 import 'package:charts_application/controllers/reviewscontroller.dart';
 import 'package:charts_application/pages/medicalcenter/widgets/average_rating_widget.dart';
 import 'package:charts_application/pages/medicalcenter/widgets/contact_widget.dart';
 import 'package:charts_application/pages/medicalcenter/widgets/description_section_widget.dart';
 import 'package:charts_application/pages/medicalcenter/widgets/doctor_selection_dialog.dart';
 import 'package:charts_application/pages/medicalcenter/widgets/doctorcard_widget.dart';
+import 'package:charts_application/pages/medicalcenter/widgets/favorite_button.dart';
 import 'package:charts_application/pages/medicalcenter/widgets/hero_header_widget.dart';
 import 'package:charts_application/pages/medicalcenter/widgets/location_details_widget.dart';
 import 'package:charts_application/pages/medicalcenter/widgets/reviews_section_widget.dart';
@@ -26,12 +28,21 @@ class MedicalCenterDetailsPage extends StatefulWidget {
 class _MedicalCenterDetailsPageState extends State<MedicalCenterDetailsPage> {
 
   final ReviewController reviewController = Get.put(ReviewController());
+  final FavoriteController favoriteController = Get.put(FavoriteController());
+
 late final ScrollController _scrollController;
 
 @override
 void initState() {
   super.initState();
+ 
+  // WidgetsBinding.instance.addPostFrameCallback((_) {
+    favoriteController.initializeFavoriteStatus(
+      widget.medicalCenter.medicalCentersId!
+    );
+  // });
   reviewController.getReviews(widget.medicalCenter.medicalCentersId!);
+  reviewController.getAverageRating(widget.medicalCenter.medicalCentersId!);
   _scrollController = ScrollController();
   _scrollController.addListener(_scrollListener);
 }
@@ -57,11 +68,28 @@ void dispose() {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       floatingActionButton: _buildBookButton(context,widget.medicalCenter),
+      
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: Dimensions.height10(context)*25,
-            flexibleSpace: HeroHeaderWidget(medicalCenter: widget.medicalCenter),
+            flexibleSpace: Stack(
+  children: [
+    HeroHeaderWidget(medicalCenter: widget.medicalCenter),
+    Positioned(
+  right: Dimensions.width20(context),
+  top: MediaQuery.of(context).padding.top + Dimensions.height10(context),
+  child: ModernFavoriteButton(
+    medicalCenterId: widget.medicalCenter.medicalCentersId!,
+    onToggle: () => favoriteController.toggleFavorite(
+      widget.medicalCenter.medicalCentersId!
+    ),
+    size: Dimensions.height20(context) * 2.2,
+  ),
+),
+  ],
+),
+ 
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -102,7 +130,7 @@ void dispose() {
          Padding(
           padding: EdgeInsets.only(bottom: Dimensions.height15(context)),
           child: Text(
-            'Our Doctors',
+            'Our Doctors'.tr,
             style: TextStyle(
               fontSize: Dimensions.font26(context)-2,
               fontWeight: FontWeight.bold,
@@ -128,7 +156,7 @@ void dispose() {
   bool hasDoctors = medicalCenter.doctors != null && medicalCenter.doctors!.isNotEmpty;
 
   return Opacity(
-    opacity: hasDoctors ? 1.0 : 0.5, // ✅ Dim when disabled
+    opacity: hasDoctors ? 1.0 : 0.5, 
     child: Container(
       margin: EdgeInsets.only(
         bottom: Dimensions.height15(context),
@@ -142,12 +170,13 @@ void dispose() {
             : [],
       ),
       child: FloatingActionButton.extended(
+        heroTag: 'Book_Appointment${medicalCenter.managerUserId}',
         onPressed: hasDoctors ? () => _showDoctorSelectionDialog(context) : null, 
         backgroundColor: hasDoctors ? Colors.blue[600] : Colors.grey, 
         elevation: hasDoctors ? 3 : 0, 
         icon: const Icon(Icons.calendar_today, color: Colors.white),
         label: Text(
-          'Book Now!',
+          'Book Now!'.tr,
           style: TextStyle(
             color: Colors.white.withOpacity(hasDoctors ? 1.0 : 0.5), 
             fontWeight: FontWeight.bold,
@@ -175,7 +204,7 @@ Widget _buildWorkingHoursSection(BuildContext context)
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
          Text(
-          "Working Hours",
+          "Working Hours".tr,
           style: TextStyle(fontSize: Dimensions.font16(context)+2, fontWeight: FontWeight.bold),
         ),
                    SizedBox(height: Dimensions.height15(context)-3),
@@ -183,10 +212,10 @@ Widget _buildWorkingHoursSection(BuildContext context)
           padding: const EdgeInsets.symmetric(vertical: 6),
           child: Row(
             children: [
-              Text(_getDayName(hour.dayOfWeek!),
+              Text(_getDayName(hour.dayOfWeek!).tr,
                   style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[700])),
               const SizedBox(width: 8),
-              Text("${hour.openingTime} - ${hour.closingTime}",
+              Text("${hour.openingTime!.tr} - ${hour.closingTime!.tr}",
                   style: TextStyle(color: Colors.grey[600], fontSize: 15)),
             ],
           ),

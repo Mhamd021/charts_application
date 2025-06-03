@@ -1,5 +1,6 @@
 import 'dart:convert' as convert;
 import 'package:charts_application/constants/app_consts.dart';
+import 'package:charts_application/helper/route_helper.dart';
 import 'package:charts_application/models/response_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,7 @@ class AuthController extends GetxController implements GetxService {
   );
   RxBool isLoading = false.obs;
   RxBool isLoggedIn = false.obs;
+  final RxString userId = ''.obs;
 
   Future<ResponseModel> login(String email, String password) async {
     isLoading.value = true;
@@ -39,6 +41,7 @@ class AuthController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
         responseModel = ResponseModel(true, response.body);
         await storage.write(key: 'access_token', value: data["token"]);
+       await getUserId();
       } else {
         responseModel = ResponseModel(false, response.body);
       }
@@ -205,7 +208,22 @@ class AuthController extends GetxController implements GetxService {
     try {
       final token = await storage.read(key: 'access_token');
       _validateToken(token);
-      return _extractUserId(token!);
+            userId.value = _extractUserId(token!);
+
+      return _extractUserId(token);
+    } catch (e) {
+      _handleAuthError(e);
+      userId.value = "";
+      return null;
+    }
+  }
+
+  Future<String?> getUserName() async 
+  {
+     try {
+      final token = await storage.read(key: 'access_token');
+      _validateToken(token);
+      return _extractUserName(token!);
     } catch (e) {
       _handleAuthError(e);
       return null;
@@ -222,6 +240,16 @@ class AuthController extends GetxController implements GetxService {
     
     return userId;
   }
+  String _extractUserName(String token) {
+  final decoded = JwtDecoder.decode(token);
+  final String? userName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+
+  if (userName == null || userName.trim().isEmpty) {
+    throw FormatException('Invalid token structure - missing user name');
+  }
+
+  return userName;
+}
 
    Future<void> _validateToken(String? token) async {
     if (token == null) {
@@ -243,6 +271,13 @@ class AuthController extends GetxController implements GetxService {
       clearAccessToken();
     }
   }
+Future<void> handleTokenExpiry() async {
+  final token = await storage.read(key: 'access_token');
+  if (token != null && JwtDecoder.isExpired(token)) {
+    await clearAccessToken();
+    Get.offAllNamed(RouteHelper.getSignIn());
+  }
+}
 
   
 

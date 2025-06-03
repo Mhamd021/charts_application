@@ -54,13 +54,13 @@ class Post {
 class MedicalCenter {
   final int medicalCentersId;
   final String medicalCentersName;
-  final String category;
+  final String? category;
   final String logoImageUrl;
 
   MedicalCenter({
     required this.medicalCentersId,
     required this.medicalCentersName,
-    required this.category,
+     this.category,
     required this.logoImageUrl,
   });
 

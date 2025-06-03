@@ -131,7 +131,7 @@ class Doctor {
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
     return Doctor(
-      id: json['id'],
+      id: json['doctorId'],
       fullName: json['fullName'],
       profileImageUrl: json['profileImageUrl'],
       specialty: json['specialty'],
