@@ -28,7 +28,7 @@ class LocationDetailsWidget extends StatelessWidget {
           
           if (medicalCenter.latitude != null && medicalCenter.longitude != null)
             Padding(
-              padding: EdgeInsets.only(top: Dimensions.height10(context) + 2),
+              padding: EdgeInsets.only(top: Dimensions.height12(context)),
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.map),
                 label:  Text("View on Map".tr),

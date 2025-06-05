@@ -9,7 +9,6 @@ class GoogleSignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      // Style the button as a white background button with a grey border
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.black, backgroundColor: Colors.white, // Text color
         elevation: 2,
@@ -17,8 +16,7 @@ class GoogleSignInButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(Dimensions.radius30(context)),
           side: BorderSide(color: Colors.grey.shade300),
         ),
-        // Remove default padding as we'll customize it
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding:  EdgeInsets.symmetric(horizontal: Dimensions.width12(context), vertical: Dimensions.height10(context)-2),
       ),
       onPressed: onPressed,
       child: Row(

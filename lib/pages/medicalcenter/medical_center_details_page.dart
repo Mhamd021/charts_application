@@ -36,11 +36,9 @@ late final ScrollController _scrollController;
 void initState() {
   super.initState();
  
-  // WidgetsBinding.instance.addPostFrameCallback((_) {
     favoriteController.initializeFavoriteStatus(
       widget.medicalCenter.medicalCentersId!
     );
-  // });
   reviewController.getReviews(widget.medicalCenter.medicalCentersId!);
   reviewController.getAverageRating(widget.medicalCenter.medicalCentersId!);
   _scrollController = ScrollController();
@@ -77,7 +75,8 @@ void dispose() {
   children: [
     HeroHeaderWidget(medicalCenter: widget.medicalCenter),
     Positioned(
-  right: Dimensions.width20(context),
+   right: Get.locale?.languageCode == 'ar' ? null : Dimensions.width20(context),
+  left: Get.locale?.languageCode == 'ar' ? Dimensions.width20(context) : null,
   top: MediaQuery.of(context).padding.top + Dimensions.height10(context),
   child: ModernFavoriteButton(
     medicalCenterId: widget.medicalCenter.medicalCentersId!,
@@ -207,16 +206,16 @@ Widget _buildWorkingHoursSection(BuildContext context)
           "Working Hours".tr,
           style: TextStyle(fontSize: Dimensions.font16(context)+2, fontWeight: FontWeight.bold),
         ),
-                   SizedBox(height: Dimensions.height15(context)-3),
+                   SizedBox(height: Dimensions.height12(context)),
         ...widget.medicalCenter.workingHours!.map((hour) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
+          padding:  EdgeInsets.symmetric(vertical: Dimensions.height12(context)/2),
           child: Row(
             children: [
               Text(_getDayName(hour.dayOfWeek!).tr,
                   style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[700])),
-              const SizedBox(width: 8),
+               SizedBox(width: Dimensions.width10(context)-8),
               Text("${hour.openingTime!.tr} - ${hour.closingTime!.tr}",
-                  style: TextStyle(color: Colors.grey[600], fontSize: 15)),
+                  style: TextStyle(color: Colors.grey[600], fontSize: Dimensions.font16(context))),
             ],
           ),
         ))

@@ -13,20 +13,20 @@ class AverageRatingWidget extends StatelessWidget {
     return Obx(() => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Average Rating", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+             Text("Average Rating".tr, style: TextStyle(fontSize: Dimensions.iconSize16(context), fontWeight: FontWeight.bold)),
             SizedBox(height: Dimensions.height10(context)),
             reviewController.averageRating.value > 0
                 ? Row(
                     children: [
-                      Icon(Icons.star, color: Colors.amber, size: 24),
-                      SizedBox(width: 5),
+                      Icon(Icons.star, color: Colors.amber, size: Dimensions.iconSize24(context)),
+                      SizedBox(width: Dimensions.width10(context)/2),
                       Text(
                         reviewController.averageRating.value.toStringAsFixed(1),
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        style:  TextStyle(fontSize: Dimensions.font16(context), fontWeight: FontWeight.w600),
                       ),
                     ],
                   )
-                : const Text("No ratings yet", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                :  Text("No ratings yet".tr, style: TextStyle(fontSize: Dimensions.font16(context), fontWeight: FontWeight.w400)),
           ],
         ));
   }

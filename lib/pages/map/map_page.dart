@@ -1,3 +1,4 @@
+import 'package:charts_application/constants/dimensions.dart';
 import 'package:charts_application/controllers/medicalmapcontroller.dart';
 import 'package:charts_application/pages/map/map_loader_page.dart';
 import 'package:charts_application/pages/map/marker_loader.dart';
@@ -165,7 +166,7 @@ class _MapPageGetXState extends State<MapPageGetX> with TickerProviderStateMixin
                           },
                           child: Obx(() => BouncingMarker(
                                 isLoading: apiController.isFetchingDetails.value,
-                                child: const Icon(Icons.location_on, color: Colors.blue, size: 40),
+                                child:  Icon(Icons.location_on, color: Colors.blue, size: Dimensions.iconSize16(context)*2),
                               )),
                         ),
                       )).toList(),

@@ -36,14 +36,14 @@ class ReviewsSectionWidget extends StatelessWidget {
         return ShadowedContainerWidget(
           child:  Center(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:  EdgeInsets.all(Dimensions.width10(context)-2),
               child: GestureDetector(
                 onTap: () 
                 {
                   _showReviewDialog(context);
                 },
                 child: Text(
-                  "No reviews yet.click and be the first to leave one!",
+                  "No reviews yet.click and be the first to leave one!".tr,
                   style: TextStyle
                   (
                     color: Colors.blue
@@ -63,11 +63,11 @@ class ReviewsSectionWidget extends StatelessWidget {
              Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-           Text("User Reviews", style: TextStyle(fontSize: Dimensions.font16(context) + 2, fontWeight: FontWeight.bold)),
+           Text("User Reviews".tr, style: TextStyle(fontSize: Dimensions.font16(context) + 2, fontWeight: FontWeight.bold)),
         _buildAddReviewButton(context),
       ],
     ),
-    SizedBox(height: Dimensions.height15(context) - 3),
+    SizedBox(height: Dimensions.height12(context)),
      Obx(() => Column(
       children: [
         ...reviewController.reviews
@@ -81,8 +81,8 @@ class ReviewsSectionWidget extends StatelessWidget {
           ? 0 
           : reviewController.reviews.length,
                 child: Text(_expandedReviews.value > 0 
-              ? "Show Less" 
-              : "Show More (${reviewController.reviews.length - _visibleReviewsCount})"),
+              ? "Show Less".tr 
+              : "Show More (${reviewController.reviews.length - _visibleReviewsCount})".tr),
         ),
       ],
     )
@@ -101,7 +101,7 @@ class ReviewsSectionWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       onPressed: () => _showReviewDialog(context),
-      child: Icon(Icons.add_comment, size: Dimensions.font16(context)),
+      child: Icon(Icons.add_comment_rounded, size: Dimensions.font16(context)),
     );
   }
 
@@ -119,10 +119,9 @@ class ReviewsSectionWidget extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // User Avatar with Initials
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: Dimensions.width10(context)*4,
+                    height: Dimensions.height10(context)*4,
                     decoration: BoxDecoration(
                       color: Colors.blue.shade50,
                       shape: BoxShape.circle,
@@ -154,24 +153,24 @@ class ReviewsSectionWidget extends StatelessWidget {
                                   fontSize: Dimensions.font16(context)
                                 )),
                             ),
-                            _buildStarRating(review.rating),
-                            SizedBox(width: 8),
+                            _buildStarRating(review.rating,context),
+                            SizedBox(width: Dimensions.width10(context)-2),
                             Text("${review.rating}.0",
                               style: TextStyle(
                                 color: Colors.blueGrey,
-                                fontSize: 14
+                                fontSize: Dimensions.font16(context)-2
                               )),
                           ],
                         ),
                         
                         // Review Date
                         Padding(
-                          padding: EdgeInsets.only(top: 4),
+                          padding: EdgeInsets.only(top: Dimensions.width10(context)-6),
                           child: Text(
                             _formatDate(review.createdAt),
                             style: TextStyle(
                               color: Colors.grey[600],
-                              fontSize: 12
+                              fontSize: Dimensions.font16(context)-4
                             ),
                           ),
                         ),
@@ -184,13 +183,13 @@ class ReviewsSectionWidget extends StatelessWidget {
         child: PopupMenuButton(
                             itemBuilder: (context) => [
         PopupMenuItem(
-          child: Text("Edit"),
+          child: Text("Edit".tr),
           onTap: () => _showReviewDialog(context, existingReview: review),
         ),
         
         
         PopupMenuItem(
-          child: Text("Delete"),
+          child: Text("Delete".tr),
           onTap: () => reviewController.deleteReview(review.id, medicalCenterId, review.userId),
         ),
             ],
@@ -203,7 +202,7 @@ class ReviewsSectionWidget extends StatelessWidget {
               // Review Comment
               Padding(
                 padding: EdgeInsets.only(
-                  left: 55, // Align with avatar
+                  left: Dimensions.width10(context)*10 +Dimensions.width10(context)/2, 
                   top: Dimensions.height10(context),
                 ),
                 child: Text(review.comment,
@@ -220,12 +219,12 @@ class ReviewsSectionWidget extends StatelessWidget {
   }
 
   
-  Widget _buildStarRating(int rating) {
+  Widget _buildStarRating(int rating,BuildContext context) {
     return Row(
       children: List.generate(5, (index) => Icon(
         Icons.star,
         color: index < rating ? Colors.amber : Colors.grey.shade300,
-        size: 18,
+        size: Dimensions.iconSize16(context),
       )),
     );
   }
@@ -319,7 +318,7 @@ void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
           children: [
             // Dialog Title
             Text(
-              _isEditing.value ? "Edit Review" : "Add Review",
+              _isEditing.value ? "Edit Review".tr : "Add Review".tr,
               style: TextStyle(
                 fontSize: Dimensions.font20(context),
                 fontWeight: FontWeight.bold,
@@ -344,7 +343,7 @@ void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
               controller: _commentController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: "Write your review...",
+                hintText: "Write your review...".tr,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(Dimensions.radius15(context) - 2),
                 ),
@@ -359,7 +358,7 @@ void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
                 TextButton(
                   onPressed: () => Get.back(),
                   child: Text(
-                    "Cancel",
+                    "cancel".tr,
                     style: TextStyle(color: Colors.red, fontSize: Dimensions.font16(context)),
                   ),
                 ),
@@ -385,7 +384,7 @@ void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
                     }
                   },
                   child: Text(
-                    _isEditing.value ? "Update" : "Submit",
+                    _isEditing.value ? "Update".tr : "submit".tr,
                     style: TextStyle(fontSize: Dimensions.font16(context)),
                   ),
                 ),
@@ -422,8 +421,8 @@ void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
               Row(
                 children: [
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: Dimensions.width10(context)*4,
+                    height: Dimensions.height10(context)*4,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
@@ -434,14 +433,14 @@ void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: 100,
-                        height: 16,
+                        width: Dimensions.width10(context)*10,
+                        height: Dimensions.height15(context)+1,
                         color: Colors.white,
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: Dimensions.height12(context)/3),
                       Container(
-                        width: 80,
-                        height: 12,
+                        width: Dimensions.width10(context)*8,
+                        height: Dimensions.height12(context),
                         color: Colors.white,
                       ),
                     ],
@@ -451,13 +450,13 @@ void _showReviewDialog(BuildContext context, {ReviewModel? existingReview}) {
               SizedBox(height: Dimensions.height10(context)),
               Container(
                 width: double.infinity,
-                height: 14,
+                height: Dimensions.height12(context)+2,
                 color: Colors.white,
               ),
-              SizedBox(height: 4),
+              SizedBox(height: Dimensions.height12(context)/3),
               Container(
-                width: 200,
-                height: 14,
+                width: Dimensions.width10(context)*20,
+                height: Dimensions.height12(context)+2,
                 color: Colors.white,
               ),
             ],

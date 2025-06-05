@@ -3,6 +3,7 @@ import 'package:charts_application/constants/dimensions.dart';
 import 'package:charts_application/controllers/postcontroller.dart';
 import 'package:charts_application/helper/image_helper.dart';
 import 'package:charts_application/models/Post.dart';
+import 'package:charts_application/pages/posts/comment_not_favorite_combonent.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'posts_skeleton.dart';
@@ -28,7 +29,7 @@ class _MedicalCenterPostsPageState extends State<MedicalCenterPostsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Medical Center Posts')),
+      appBar: AppBar(title:  Text('Medical Center Posts'.tr)),
       body: Column(
         children: [
           Expanded(
@@ -43,7 +44,7 @@ class _MedicalCenterPostsPageState extends State<MedicalCenterPostsPage> {
               }
             
               if (postController.posts.isEmpty) {
-                return const Center(child: Text("No posts available"));
+                return  Center(child: Text("No posts available".tr));
               }
             
               return ListView.builder(
@@ -113,7 +114,7 @@ class _MedicalCenterPostsPageState extends State<MedicalCenterPostsPage> {
           // Post Text Section
           Align(
               alignment: Alignment.topLeft,
-            child: Text(post.text, style: TextStyle(fontSize: Dimensions.font20(context) / 2 + 5))),
+            child: Text(post.text, style: TextStyle(fontSize: Dimensions.font16(context)))),
           SizedBox(height: Dimensions.width10(context) / 4),
 
           imageUrl.isNotEmpty
@@ -129,8 +130,26 @@ class _MedicalCenterPostsPageState extends State<MedicalCenterPostsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${post.likesCount} likes"),
-              Text("${post.commentsCount} comments"),
+              Obx(()=> Row(
+                children: [
+                 
+                  Text("${post.commentsCount.value}"),
+                  SizedBox(width: Dimensions.width10(context),),
+                  Text("comments".tr),
+                  
+                ],
+              )),
+
+               Obx(() => Row(
+                children: [
+                  Text("${post.likesCount.value}"),
+                  Icon(
+                    Icons.thumb_up_alt,
+                    color: Colors.blue,
+                    size: Dimensions.iconSize16(context),
+                    )
+                ],
+              )),
             ],
           ),
           const Divider(),
@@ -140,29 +159,26 @@ class _MedicalCenterPostsPageState extends State<MedicalCenterPostsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               GestureDetector(
-                onTap: () {}, // 🔥 Functionality will be added later
-                child: Row(
-                  children: [
-                    Icon(
-                      post.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                      color: post.isLiked ? Colors.blue : Colors.grey,
+               onTap: () => postController.toggleLike(post.id),
+                child: Obx(() => Row(
+    children: [
+      Icon(
+        post.isLiked.value ? Icons.thumb_up : Icons.thumb_up_outlined,
+        color: post.isLiked.value ? Colors.blue : Colors.grey,
+      ),
+      SizedBox(width: Dimensions.width10(context) / 2),
+      Text(post.isLiked.value ? "Liked".tr : "Like".tr),
+    ],
+  )),
+              ),
+              Row(
+               children: [
+                 CommentnotFavoriteButton(
+                      postId: post.id,
                     ),
-                    SizedBox(width: Dimensions.width10(context)/2),
-                                  Text(post.isLiked ? "Liked" : "Like"),
-
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {}, // 🔥 Functionality will be added later
-                child: Row(
-                  children: [
-                    const Icon(Icons.messenger_outline, color: Colors.grey),
-                    SizedBox(width: Dimensions.width10(context)/2),
-                    const Text("Comment"),
-                  ],
-                ),
-              ),
+            
+               ],
+             ),
             ],
           ),
         ],

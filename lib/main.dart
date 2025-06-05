@@ -4,24 +4,34 @@ import 'package:charts_application/pages/home/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:charts_application/helper/initial.dart' as deb;
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+
+Future<Locale> getSavedLocale() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? langCode = prefs.getString('selected_language') ?? 'en';
+  return Locale(langCode);
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await deb.init();
-  runApp(const MyApp());
+   Locale locale = await getSavedLocale();
+  runApp(MyApp(locale: locale));
 }
 
 class MyApp extends StatelessWidget {
-const MyApp({super.key});
+    final Locale locale;
+const MyApp({super.key, required  this.locale});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.fade,
       translations: AppTranslations(),
-      locale: Locale('en'), // Default language
+      locale: locale,
       fallbackLocale: Locale('en'),
       transitionDuration: const Duration(milliseconds: 75),
       getPages: RouteHelper.routes,
@@ -29,11 +39,10 @@ const MyApp({super.key});
     );
   }
 }
-//3-add Arabic lamguage and then the Logic for the arabic and english switch .and also add a Dark Theme for the APP and it is Optional!
-//4-check for the methods and its return values.
+
 //5-make a Save me button in the sign in and sign up.
-//6-adjust the height and width to be dynamic.
-//7- try to implement check connection before making requests!
 //what else code i do ?
+//catch the user if he has a profile image or not ! this is something cool maybe!
+//and here what else 
 
 

@@ -11,7 +11,7 @@ class ModernFavoriteButton extends StatelessWidget {
     super.key,
     required this.medicalCenterId,
     required this.onToggle,
-    this.size = 36,
+    this.size = 30,
   });
 
   @override

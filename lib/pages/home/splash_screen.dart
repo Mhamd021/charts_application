@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.initState();
     _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this)..repeat();
     _checkLoginStatus();
-    authController.clearAccessToken();
+    
   }
 
   Future<void> _checkLoginStatus() async {
@@ -60,13 +60,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             // Typing dots animation
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) {
+              children: List.generate(5, (index) {
                 return AnimatedOpacity(
                   opacity: _controller.value < 0.5 ? 1.0 : 0.2,
                   duration: const Duration(milliseconds: 500),
                   child: Text(
                     "•",
-                    style: TextStyle(fontSize: 30, color: Colors.blueAccent),
+                    style: TextStyle(fontSize: Dimensions.font26(context), color: Colors.blueAccent),
                   ),
                 );
               }),

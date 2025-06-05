@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:charts_application/constants/app_consts.dart';
 import 'package:charts_application/controllers/auth_controller.dart';
+import 'package:charts_application/helper/route_helper.dart';
 import 'package:charts_application/models/FavoritePosts_model.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,7 @@ class FavoriteController extends GetxController {
 
   Future<void> initializeFavoriteStatus(int medicalCenterId) async {
     try {
-      final userId = await _authController.getUserId();
+      final userId =  _authController.userId.value;
       final response = await http.get(
         Uri.parse('https://doctormap.onrender.com/api/Favorites/$userId'),
        headers: {
@@ -75,13 +76,14 @@ class FavoriteController extends GetxController {
         "medicalCenterId": medicalCenterId  
       }),
     );
-    Get.snackbar("Success", "added to favorites");
+    Get.snackbar("Success".tr, "fav_add_success".tr, snackPosition: SnackPosition.TOP);
+
     fetchFavoritePosts();
     return response.statusCode == 200;
   }
 
   Future<bool> _removeFromFavorites(int medicalCenterId) async {
-    final userId = await _authController.getUserId();
+      final userId =  _authController.userId.value;
     final token = await _authController.storage.read(key: "access_token");
     
     final response = await http.delete(
@@ -91,9 +93,8 @@ class FavoriteController extends GetxController {
       ),
       headers: {"Authorization": "Bearer $token"},
     );
-    Get.snackbar("Success", "removed from favorites"
-    
-    );
+    Get.snackbar("Success".tr, "fav_remove_success".tr, snackPosition: SnackPosition.TOP);
+
     return response.statusCode == 200;
   }
 
@@ -101,12 +102,12 @@ class FavoriteController extends GetxController {
   Future<void> fetchFavoritePosts({int pageNumber = 1, int pageSize = 10}) async {
   try {
     isLoading.value = true;
-    final userId = await _authController.getUserId();
+      final userId =  _authController.userId.value;
     final token = await _authController.storage.read(key: "access_token");
 
-    if (token == null || userId == null || userId.isEmpty) {
-      Get.snackbar("Error", "User authentication failed");
-      Get.offNamed("/signin"); 
+    if (token == null || userId.isEmpty) {
+      Get.snackbar("Error".tr, "unauthorized".tr);
+      Get.offNamed(RouteHelper.getSignIn()); 
       isLoading.value = false;
       return;
     }
@@ -133,7 +134,8 @@ class FavoriteController extends GetxController {
         Get.snackbar("Error", "Unexpected response structure");
       }
     } else {
-      Get.snackbar("Error", "Failed to fetch favorite posts");
+      Get.snackbar("Error".tr, "fav_fetch_failed".tr, snackPosition: SnackPosition.TOP);
+
     }
   } catch (e) {
     Get.snackbar("Failed", "Error fetching favorite posts: $e");
@@ -171,7 +173,8 @@ Future<void> toggleLike(int postId) async {
       // 🔄 Rollback if request fails
       post.isLikedByUser.value = !post.isLikedByUser.value;
       post.likesCount.value += post.isLikedByUser.value ? 1 : -1;
-      Get.snackbar("Error", "Failed to update like status");
+      Get.snackbar("Error".tr, "like_update_failed".tr, snackPosition: SnackPosition.TOP);
+
     }
   } catch (e) {
     post.isLikedByUser.value = !post.isLikedByUser.value;

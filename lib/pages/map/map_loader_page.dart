@@ -1,3 +1,4 @@
+import 'package:charts_application/constants/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class MapLoader extends StatefulWidget {
@@ -30,11 +31,11 @@ class _MapLoaderState extends State<MapLoader> with SingleTickerProviderStateMix
     return Center(
       child: ScaleTransition(
         scale: _animation,
-        child: const Column(
+        child:  Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.location_searching, size: 48, color: Colors.blue),
-            SizedBox(height: 8),
+            Icon(Icons.location_searching, size: Dimensions.iconSize24(context)*2, color: Colors.blue),
+            SizedBox(height: Dimensions.height15(context)/2),
             Text('Finding Medical Centers...', 
               style: TextStyle(fontWeight: FontWeight.bold))
           ],

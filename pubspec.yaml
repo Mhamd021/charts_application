@@ -45,6 +45,9 @@ dependencies:
   connectivity_plus: ^6.1.4
   jwt_decoder: ^2.0.1
   geolocator: ^14.0.0
+  font_awesome_flutter: ^10.8.0
+  url_launcher: ^6.3.1
+  shared_preferences: ^2.5.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

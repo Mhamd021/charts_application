@@ -20,6 +20,9 @@ class Dimensions {
   // Dynamic height values.
   static double height10(BuildContext context) =>
       screenHeight(context) / 85.09;
+
+  static double height12(BuildContext context) => screenHeight(context) / 70.91;
+
   static double height15(BuildContext context) =>
       screenHeight(context) / 56.72;
   static double height20(BuildContext context) =>
@@ -32,6 +35,9 @@ class Dimensions {
   // Dynamic width values.
   static double width10(BuildContext context) =>
       screenWidth(context) / 39.272;
+      
+      static double width12(BuildContext context) => screenWidth(context) / 32.73;
+
   static double width15(BuildContext context) =>
       screenWidth(context) / 26.18;
   static double width20(BuildContext context) =>

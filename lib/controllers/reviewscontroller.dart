@@ -16,7 +16,8 @@ class ReviewController extends GetxController {
  void clearReviews() => reviews.clear();
   Future<void> getReviews(int medicalCenterId) async 
   {
-    final userId = await _authController.getUserId();
+   final userId = _authController.userId.value;
+
     try {
       isLoading.value = true;
       final response = await http.get(
@@ -31,7 +32,8 @@ class ReviewController extends GetxController {
         final List<dynamic> data = jsonDecode(response.body);
         reviews.assignAll(data.map((json) => ReviewModel.fromJson(json)).toList());
       } else {
-        throw Exception("Failed to load reviews (Status ${response.statusCode})");
+        Get.snackbar("Error".tr, "reviews_fetch_failed".tr, snackPosition: SnackPosition.TOP);
+
       }
     } catch (e) {
       Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.TOP);
@@ -53,7 +55,8 @@ class ReviewController extends GetxController {
       if (response.statusCode == 200) {
         averageRating.value = double.parse(response.body);
       } else {
-        throw Exception("Failed to fetch average rating.");
+       Get.snackbar("Error".tr, "rating_fetch_failed".tr, snackPosition: SnackPosition.TOP);
+
       }
     } catch (e) {
       Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.TOP);
@@ -63,10 +66,15 @@ class ReviewController extends GetxController {
   Future<void> addReview(int medicalCenterId, int rating, String comment) async 
   {
     try {
-      final userId = await _authController.getUserId();
+      final userId =  _authController.userId.value;
       final token = await _authController.storage.read(key: "access_token");
 
-      if (userId == null || token == null) throw Exception("Login required.");
+      if (userId.isEmpty || token == null) {
+  Get.snackbar("Error".tr, "unauthorized".tr, snackPosition: SnackPosition.TOP);
+  Get.offNamed(RouteHelper.getSignIn());
+  return;
+}
+
 
       final response = await http.post(
         Uri.parse("https://doctormap.onrender.com/api/Review/AddReview"),
@@ -89,7 +97,8 @@ class ReviewController extends GetxController {
         getAverageRating(medicalCenterId); 
         
       } else {
-       Get.snackbar("failed", response.body);
+       Get.snackbar("Error".tr, "review_add_failed".tr, snackPosition: SnackPosition.TOP);
+
       }
     } catch (e) {
       Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.TOP);
@@ -128,7 +137,8 @@ class ReviewController extends GetxController {
         getReviews(medicalCenterId);
         getAverageRating(medicalCenterId);
       } else {
-        Get.snackbar("Failed", response.body);
+       Get.snackbar("Error".tr, "review_update_failed".tr, snackPosition: SnackPosition.TOP);
+
               }
     } catch (e) {
       Get.snackbar("Failed", e.toString());
@@ -138,12 +148,14 @@ class ReviewController extends GetxController {
   Future<void> deleteReview(int reviewId, int medicalCenterId, String userReviewId) async {
   try {
     final token = await _authController.storage.read(key: "access_token");
-    final userId = await _authController.getUserId();
+    final userId =  _authController.userId.value;
 
-    if (token == null) {
-      Get.offNamed(RouteHelper.getSignIn());
-      return;
-    }
+    if (userId.isEmpty || token == null) {
+  Get.snackbar("Error".tr, "unauthorized".tr, snackPosition: SnackPosition.TOP);
+  Get.offNamed(RouteHelper.getSignIn());
+  return;
+}
+
 
     if (userId.toString() != userReviewId) {
       Get.snackbar("Unauthorized", "You can only delete your own reviews!");
@@ -163,7 +175,8 @@ class ReviewController extends GetxController {
       reviews.refresh();
       getAverageRating(medicalCenterId);
     } else {
-      Get.snackbar("Failed", response.body);
+     Get.snackbar("Error".tr, "unauthorized_review_delete".tr, snackPosition: SnackPosition.TOP);
+
     }
   } catch (e) {
     Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.TOP);

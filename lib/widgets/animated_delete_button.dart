@@ -1,3 +1,4 @@
+import 'package:charts_application/constants/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedDeleteIcon extends StatefulWidget {
@@ -39,7 +40,10 @@ class _AnimatedDeleteIconState extends State<AnimatedDeleteIcon> {
       },
       child: GestureDetector(
         onTap: _handleDelete,
-        child: const Icon(Icons.delete, color: Colors.redAccent),
+        child:  Icon(
+          Icons.delete, color: Colors.blue,
+          size: Dimensions.iconSize16(context),
+          ),
       ),
     );
   }

@@ -2,16 +2,16 @@ import 'package:charts_application/constants/dimensions.dart';
 import 'package:charts_application/controllers/auth_controller.dart';
 import 'package:charts_application/controllers/commentcontroller.dart';
 import 'package:charts_application/models/Comment.dart';
-import 'package:charts_application/pages/posts/comment_input_field.dart';
+import 'package:charts_application/pages/posts/comment_not_favorite_input.dart';
 import 'package:charts_application/pages/posts/comments_skeleton.dart';
 import 'package:charts_application/widgets/animated_delete_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-class CommentButton extends StatelessWidget {
+class CommentnotFavoriteButton extends StatelessWidget {
   final int postId;
-const   CommentButton({
+const   CommentnotFavoriteButton({
     super.key,
     required this.postId,
   });
@@ -55,13 +55,13 @@ class CommentDialog extends StatelessWidget {
       ),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.8,
-        padding: const EdgeInsets.all(16),
+        padding:  EdgeInsets.all(Dimensions.width12(context)+4),
         child: Column(
           children: [
             _buildHeader(context),
-             Divider(height: Dimensions.height10(context)*2),
+             Divider(height: Dimensions.height20(context)),
             Expanded(child: _buildCommentList()),
-            CommentInputField(postId: postId)
+            CommentnotFavoriteInputField(postId: postId)
           ],
         ),
       ),
@@ -93,10 +93,10 @@ class CommentDialog extends StatelessWidget {
         
         return ListView.builder(
           itemCount: controller.comments.length,
-          itemBuilder: (context, index) => CommentItem(
+          itemBuilder: (context, index) => CommentnotFavoriteItem(
             comment: controller.comments[index],
             onDelete: ()=> 
-            controller.removeComment(postId,controller.comments[index].commentId),
+            controller.removeCommentnotFavorite(postId,controller.comments[index].commentId),
          
           ),
         );
@@ -107,12 +107,12 @@ class CommentDialog extends StatelessWidget {
   
 }
 
-class CommentItem extends StatelessWidget {
+class CommentnotFavoriteItem extends StatelessWidget {
   
   final Comment comment;
   final VoidCallback onDelete;
 
-  const CommentItem({
+  const CommentnotFavoriteItem({
     super.key,
     required this.comment,
     required this.onDelete,
@@ -123,13 +123,13 @@ class CommentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
     return Padding(
-      padding:  EdgeInsets.symmetric(vertical: Dimensions.height10(context)-2, horizontal: Dimensions.width12(context)),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.grey[100],
           borderRadius: BorderRadius.circular(12),
         ),
-        padding:  EdgeInsets.all(Dimensions.width12(context)),
+        padding: const EdgeInsets.all(12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -140,7 +140,7 @@ class CommentItem extends StatelessWidget {
                 style: TextStyle(color: Colors.blue[800], fontWeight: FontWeight.bold),
               ),
             ),
-             SizedBox(width: Dimensions.width12(context)),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,7 +149,7 @@ class CommentItem extends StatelessWidget {
                     comment.userName,
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                   SizedBox(height: Dimensions.height12(context)/3),
+                  const SizedBox(height: 4),
                   Text(
                     comment.commentText,
                     style: TextStyle(color: Colors.grey[700]),

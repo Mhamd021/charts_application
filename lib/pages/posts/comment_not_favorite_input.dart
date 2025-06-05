@@ -4,16 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CommentInputField extends StatefulWidget {
+class CommentnotFavoriteInputField extends StatefulWidget {
   final int postId;
 
-  const CommentInputField({super.key, required this.postId});
+  const CommentnotFavoriteInputField({super.key, required this.postId});
 
   @override
   _CommentInputFieldState createState() => _CommentInputFieldState();
 }
 
-class _CommentInputFieldState extends State<CommentInputField> {
+class _CommentInputFieldState extends State<CommentnotFavoriteInputField> {
   final TextEditingController textController = TextEditingController();
   final Commentcontroller controller = Get.find<Commentcontroller>();
   bool isTyping = false;
@@ -37,7 +37,7 @@ class _CommentInputFieldState extends State<CommentInputField> {
     
     setState(() => isSending = true);
     
-    await controller.addComment(widget.postId, textController.text);
+    await controller.addCommentnotFavorite(widget.postId, textController.text);
     textController.clear();
 
     // Wait a bit before resetting animation
@@ -60,7 +60,7 @@ class _CommentInputFieldState extends State<CommentInputField> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                contentPadding:  EdgeInsets.symmetric(horizontal: Dimensions.width15(context)+1),
               ),
             ),
           ),
@@ -74,14 +74,15 @@ class _CommentInputFieldState extends State<CommentInputField> {
               onTap: _sendComment,
               child: isSending
                   ?  SizedBox(
-                      height: Dimensions.height10(context)*3,
-                      width: Dimensions.width10(context)*3,
+                      height: Dimensions.height30(context),
+                      width: Dimensions.width20(context),
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         color: Colors.blue,
                       ),
                     )
                   : Icon(
+                    //Icons.near_me
                       CupertinoIcons.paperplane_fill,
                       key: ValueKey(isTyping),
                       color: isTyping ? Colors.blue : Colors.grey,

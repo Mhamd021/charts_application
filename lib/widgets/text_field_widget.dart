@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:charts_application/constants/dimensions.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class AppTextField extends StatefulWidget {
   final TextEditingController textController;
@@ -53,7 +54,7 @@ class _AppTextFieldState extends State<AppTextField> {
         validator: widget.validator ??
             (value) {
               if (value == null || value.isEmpty) {
-                return 'This field is required';
+                return 'This field is required'.tr;
               }
               return null;
             },

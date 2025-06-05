@@ -1,5 +1,7 @@
+import 'package:charts_application/constants/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_application/models/medical_center_details_model.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SocialMediaRowWidget extends StatelessWidget {
   final MedicalCenterDetailsModel medicalCenter;
@@ -9,17 +11,17 @@ class SocialMediaRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 12,
+       spacing: Dimensions.width12(context),
       alignment: WrapAlignment.center,
       children: [
         if (medicalCenter.facebookUrl != null)
           _socialMediaButton(Icons.facebook, Colors.blue[800]!),
         if (medicalCenter.instagramUrl != null)
-          _socialMediaButton(Icons.camera_alt, Colors.pink[600]!),
+          _socialMediaButton(FontAwesomeIcons.instagram, Colors.pink[600]!),
         if (medicalCenter.twitterUrl != null)
-          _socialMediaButton(Icons.alternate_email, Colors.blue[400]!),
+          _socialMediaButton(FontAwesomeIcons.twitter, Colors.blue[400]!),
         if (medicalCenter.whatsAppNumber != null)
-          _socialMediaButton(Icons.telegram, Colors.blue[600]!),
+          _socialMediaButton(FontAwesomeIcons.whatsapp, Colors.green[600]!),
       ],
     );
   }
@@ -28,7 +30,8 @@ class SocialMediaRowWidget extends StatelessWidget {
     return IconButton(
       icon: Icon(icon),
       color: color,
-      onPressed: () {}, 
+      onPressed: () {}
+   , 
       style: IconButton.styleFrom(
         backgroundColor: color.withOpacity(0.1),
         shape: RoundedRectangleBorder(

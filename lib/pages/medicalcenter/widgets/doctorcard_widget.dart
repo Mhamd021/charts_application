@@ -2,6 +2,7 @@ import 'package:charts_application/constants/dimensions.dart';
 import 'package:charts_application/helper/image_helper.dart';
 import 'package:charts_application/models/medical_center_details_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class DoctorCard extends StatelessWidget {
   final Doctor doctor;
@@ -88,7 +89,7 @@ class DoctorCard extends StatelessWidget {
                   ),
                 if (doctor.spokenLanguages != null)
                   Padding(
-                    padding: const EdgeInsets.only(top: 4),
+                    padding:  EdgeInsets.only(top: Dimensions.width12(context)/3),
                     child: Wrap(
                       spacing: 4,
                       children: doctor.spokenLanguages!
@@ -104,7 +105,7 @@ class DoctorCard extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
                       icon:  Icon(Icons.calendar_month, size: Dimensions.iconSize16(context)),
-                      label: const Text('Book Now'),
+                      label:  Text('Book Now!'.tr),
                       onPressed: () {},
                     ),
                   ),

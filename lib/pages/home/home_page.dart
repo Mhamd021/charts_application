@@ -1,3 +1,4 @@
+import 'package:charts_application/constants/dimensions.dart';
 import 'package:charts_application/pages/appointments/user_appointments_page.dart';
 import 'package:charts_application/pages/map/map_page.dart';
 import 'package:charts_application/pages/posts/posts_page.dart';
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> {
         inactiveColorPrimary: Colors.grey,
       ),
        PersistentBottomNavBarItem(
-        icon: const Icon(Icons.post_add),
+        icon: const Icon(Icons.feed_outlined),
         title: "Posts".tr,
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.grey,
@@ -48,7 +49,10 @@ class _HomePageState extends State<HomePage> {
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.person),
+        icon:  Icon(
+          Icons.person,
+          size: Dimensions.iconSize16(context),
+          ),
         title: "Profile".tr,
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.grey,

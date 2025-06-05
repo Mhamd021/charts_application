@@ -27,8 +27,11 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text("My Appointments".tr, style: TextStyle(fontWeight: FontWeight.bold ,color: Colors.white)),
-        backgroundColor: Colors.blue,
+        title:  Text(
+  "My Appointments".tr,
+  style: TextStyle(fontSize: Dimensions.font20(context)), 
+),
+        backgroundColor: Colors.white,
         elevation: 4,
       ),
       body: RefreshIndicator(
@@ -44,14 +47,14 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> {
           if (appointmentController.appointments.isEmpty) {
             return Center(
               child: Text("No appointments found".tr, 
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 16)),
+                style: TextStyle(color: Colors.grey.shade600, fontSize: Dimensions.font16(context))),
             );
           }
 
           return ListView.separated(
-            padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(Dimensions.height15(context)),
             itemCount: appointmentController.appointments.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 12),
+            separatorBuilder: (context, index) =>  SizedBox(height: Dimensions.height12(context)),
             itemBuilder: (context, index) {
               final appointment = appointmentController.appointments[index];
               return _buildAppointmentCard(appointment);
@@ -66,30 +69,29 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimensions.radius15(context)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(Dimensions.height15(context)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(Icons.medical_services, color: Colors.blue, size: 20),
-                const SizedBox(width: 8),
-                Text(appointment.doctorName,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                Icon(Icons.medical_services, color: Colors.blue, size: Dimensions.iconSize24(context)),
+                 SizedBox(width: Dimensions.width10(context)),
+                Text(appointment.doctorName, style: TextStyle(fontSize: Dimensions.font16(context), fontWeight: FontWeight.w600)),
               ],
             ),
-            const SizedBox(height: 12),
+             SizedBox(height: Dimensions.height12(context)),
             _buildDetailRow(Icons.business, "Medical Center".tr, appointment.centerName),
             _buildDetailRow(Icons.calendar_today, "Requested".tr, 
               "${appointment.requestedAt.toLocal().day}/${appointment.requestedAt.toLocal().month}/${appointment.requestedAt.toLocal().year}"),
-            const SizedBox(height: 8),
+            SizedBox(height: Dimensions.height10(context)),
             Align(
               alignment: Alignment.centerRight,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:  EdgeInsets.symmetric(horizontal: Dimensions.width12(context), vertical: Dimensions.height12(context)/2),
                 decoration: BoxDecoration(
                   color: _getStatusColor(appointment.status).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -99,8 +101,8 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(_getStatusIcon(appointment.status), 
-                      size: 14, color: _getStatusColor(appointment.status)),
-                    const SizedBox(width: 6),
+                      size: Dimensions.iconSize16(context), color: _getStatusColor(appointment.status)),
+                     SizedBox(width: Dimensions.width12(context)/2),
                     Text(_getStatusText(appointment.status),
                       style: TextStyle(
                         color: _getStatusColor(appointment.status),
@@ -118,14 +120,14 @@ class _UserAppointmentsPageState extends State<UserAppointmentsPage> {
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding:  EdgeInsets.symmetric(vertical: Dimensions.height10(context)-6),
       child: Row(
         children: [
           Icon(icon, size: 16, color: Colors.grey.shade600),
           const SizedBox(width: 8),
           RichText(
             text: TextSpan(
-              style: TextStyle(color: Colors.grey.shade800, fontSize: 14),
+              style: TextStyle(color: Colors.grey.shade800, fontSize: Dimensions.font16(context)),
               children: [
                 TextSpan(text: "$label: ", 
                   style: const TextStyle(fontWeight: FontWeight.w500)),

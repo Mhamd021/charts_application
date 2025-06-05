@@ -25,13 +25,13 @@ class DoctorSelectionDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Select a Doctor",
+             Text(
+              "Select a Doctor".tr,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
+             SizedBox(height: Dimensions.height10(context)),
             SizedBox(
-              height: 250,
+              height: Dimensions.height10(context)*25,
               child: SingleChildScrollView(
                 child: Column(
                   children:
@@ -50,10 +50,10 @@ class DoctorSelectionDialog extends StatelessWidget {
                               duration: const Duration(milliseconds: 200),
                               width: double.infinity,
                               padding: EdgeInsets.all(
-                                Dimensions.width10(context) + 2,
+                                Dimensions.width12(context),
                               ),
                               margin: EdgeInsets.symmetric(
-                                vertical: Dimensions.height10(context) - 4,
+                                vertical: Dimensions.height12(context)/2,
                               ),
                               decoration: BoxDecoration(
                                 border: Border.all(
@@ -102,13 +102,13 @@ class DoctorSelectionDialog extends StatelessWidget {
           ? NetworkImage(imageUrl)
           : null,
       child: imageUrl.isEmpty // ✅ Fallback when no valid image
-          ? const Icon(Icons.person, size: 40, color: Colors.grey)
+          ?  Icon(Icons.person, size: Dimensions.iconSize24(context)*2 -8, color: Colors.grey)
           : null,
     ),
                                     );
                                   }),
                                   SizedBox(
-                                    width: Dimensions.width10(context) + 2,
+                                    width: Dimensions.width12(context),
                                   ),
                                   Column(
                                     crossAxisAlignment:
@@ -138,7 +138,7 @@ class DoctorSelectionDialog extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+             SizedBox(height: Dimensions.height12(context)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -149,14 +149,14 @@ class DoctorSelectionDialog extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
+                    padding:  EdgeInsets.symmetric(
+                      horizontal: Dimensions.width15(context),
+                      vertical: Dimensions.height10(context),
                     ),
                     elevation: 3,
                   ),
-                  child: const Text(
-                    "Cancel",
+                  child:  Text(
+                    "cancel".tr,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -179,14 +179,14 @@ class DoctorSelectionDialog extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
+                      padding:  EdgeInsets.symmetric(
+                        horizontal: Dimensions.width15(context),
+                        vertical: Dimensions.width10(context),
                       ),
                       elevation: 3,
                     ),
-                    child: const Text(
-                      "Confirm",
+                    child:  Text(
+                      "Confirm".tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

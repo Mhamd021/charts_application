@@ -34,7 +34,7 @@ class MedicalMapController extends GetxController {
           for (var center in centerList) center.medicalCentersId!: center,
         });
       } else {
-        errorMessage("Could not fetch medical centers. Please try again.");
+        Get.snackbar('Error'.tr, "medical_fetch_failed".tr);
       }
     } catch (e) {
       errorMessage(e.toString());
@@ -66,9 +66,8 @@ class MedicalMapController extends GetxController {
         selectedCenter.value = details;
         cachedCentersDetails.refresh();
       } else {
-        errorMessage(
-          "Failed to fetch details (Status ${response.statusCode}).",
-        );
+                Get.snackbar('Error'.tr, "medical_details_failed".tr);
+
       }
     } catch (e) {
       errorMessage("Error fetching details: ${e.toString()}");
@@ -86,14 +85,16 @@ class MedicalMapController extends GetxController {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error("Location services are disabled.");
+      return Future.error("location_disabled".tr);
+
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error("Location permission denied.");
+        return Future.error("location_permission_denied".tr);
+
       }
     }
 

@@ -54,7 +54,13 @@ class _FavoritePostsPageState extends State<FavoritePostsPage> {
                         ? Center(
                             child: GestureDetector(
                               onTap: _handleRefresh,
-                              child:  Text("No favorite posts available, tap to refresh".tr),
+                              child:  Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("No favorite posts available, tap to refresh".tr),
+                                  Icon(Icons.refresh_sharp)
+                                ],
+                              ),
                             ),
                           )
                         : ListView.builder(
@@ -125,7 +131,7 @@ class _FavoritePostsPageState extends State<FavoritePostsPage> {
           // Post Text Section
           Align(
             alignment: Alignment.topLeft,
-            child: Text(post.content, style: TextStyle(fontSize: Dimensions.font20(context) / 2 + 5)),
+            child: Text(post.content, style: TextStyle(fontSize: Dimensions.font16(context))),
           ),
           SizedBox(height: Dimensions.width10(context) / 4),
 
@@ -143,8 +149,27 @@ class _FavoritePostsPageState extends State<FavoritePostsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Obx(() => Text("${post.likesCount.value} likes".tr)),
-              Obx(()=> Text("${post.commentsCount.value} comments".tr)),
+             
+              Obx(()=> Row(
+                children: [
+                 
+                  Text("${post.commentsCount.value}"),
+                  SizedBox(width: Dimensions.width10(context),),
+                  Text("comments".tr),
+                  
+                ],
+              )),
+
+               Obx(() => Row(
+                children: [
+                  Text("${post.likesCount.value}"),
+                  Icon(
+                    Icons.thumb_up_alt,
+                    color: Colors.blue,
+                    size: Dimensions.iconSize16(context),
+                    )
+                ],
+              )),
             ],
           ),
           const Divider(),
@@ -164,9 +189,14 @@ class _FavoritePostsPageState extends State<FavoritePostsPage> {
     ],
   )),
 ),
-             CommentButton(
-                  postId: post.postId,
-                ),
+             Row(
+               children: [
+                 CommentButton(
+                      postId: post.postId,
+                    ),
+            
+               ],
+             ),
                 GestureDetector(
   onTap: () async {
     try {

@@ -12,36 +12,41 @@ class DescriptionSectionWidget extends StatelessWidget {
   const DescriptionSectionWidget({super.key, required this.medicalCenter});
 
   @override
-  Widget build(BuildContext context) {
-    return ShadowedContainerWidget(
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(Dimensions.width10(context)),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 4),
-          borderRadius: BorderRadius.circular(Dimensions.radius20(context)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "About Us",
-              style: TextStyle(fontSize: Dimensions.font16(context) + 2, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: Dimensions.height15(context) - 3),
-            Text(
-              medicalCenter.medicalCentersDescription ?? "No description available",
-              style: TextStyle(
-                fontSize: Dimensions.font16(context),
-                color: Colors.grey[600],
-                height: 1.4,
-              ),
-            ),
-            SizedBox(height: Dimensions.height20(context)),
+  Widget build(BuildContext context) 
+  {
 
-            // 🚀 Button to Navigate with Smooth Transition
-            _buildPostsButton(context, medicalCenter.medicalCentersId),
-          ],
+    return ClipRRect(
+      borderRadius:  BorderRadius.circular(Dimensions.radius20(context)),
+      child: ShadowedContainerWidget(
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(Dimensions.width10(context)),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white, width: 4),
+            borderRadius: BorderRadius.circular(Dimensions.radius20(context)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "About Us".tr,
+                style: TextStyle(fontSize: Dimensions.font16(context) + 2, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: Dimensions.height12(context)),
+              Text(
+                medicalCenter.medicalCentersDescription ?? "No description available".tr,
+                style: TextStyle(
+                  fontSize: Dimensions.font16(context),
+                  color: Colors.grey[600],
+                  height: 1.4,
+                ),
+              ),
+              SizedBox(height: Dimensions.height20(context)),
+      
+              // 🚀 Button to Navigate with Smooth Transition
+              _buildPostsButton(context, medicalCenter.medicalCentersId),
+            ],
+          ),
         ),
       ),
     );
@@ -108,7 +113,7 @@ class DescriptionSectionWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Text("View Posts"),
+                child:  Text("View Posts".tr),
               ),
             ],
           ),

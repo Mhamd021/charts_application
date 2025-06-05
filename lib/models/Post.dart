@@ -1,12 +1,14 @@
 
+import 'package:get/get.dart';
+
 class Post {
   final int id;
   final String text;
   final String imageUrl;
   final DateTime createdAt;
-  final int likesCount;
-  final int commentsCount;
-  final bool isLiked;
+  final RxInt likesCount;
+  final RxInt commentsCount;
+  final RxBool isLiked;
   final MedicalCenter medicalCenter;
 
   Post({
@@ -21,30 +23,30 @@ class Post {
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      id: json['id'],
-      text: json['text'],
-      imageUrl: json['imageUrl'],
-      createdAt: DateTime.parse(json['createdAt']),
-      likesCount: json['likesCount'],
-      commentsCount: json['commentsCount'],
-      isLiked: json['isLiked'],
-      medicalCenter: MedicalCenter.fromJson(json['medicalCenter']),
-    );
-  }
+  return Post(
+    id: json['id'],
+    text: json['text'],
+    imageUrl: json['imageUrl'],
+    createdAt: DateTime.parse(json['createdAt']),
+    likesCount: RxInt(json['likesCount']),  // 🔹 Wrap in RxInt
+    commentsCount: RxInt(json['commentsCount']),  // 🔹 Wrap in RxInt
+    isLiked: RxBool(json['isLiked']),  // 🔹 Wrap in RxBool
+    medicalCenter: MedicalCenter.fromJson(json['medicalCenter']),
+  );
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'text': text,
-      'imageUrl': imageUrl,
-      'createdAt': createdAt.toIso8601String(),
-      'likesCount': likesCount,
-      'commentsCount': commentsCount,
-      'isLiked': isLiked,
-      'medicalCenter': medicalCenter.toJson(),
-    };
-  }
+ Map<String, dynamic> toJson() {
+  return {
+    'id': id,
+    'text': text,
+    'imageUrl': imageUrl,
+    'createdAt': createdAt.toIso8601String(),
+    'likesCount': likesCount.value,  // 🔹 Extract value
+    'commentsCount': commentsCount.value,  // 🔹 Extract value
+    'isLiked': isLiked.value,  // 🔹 Extract value
+    'medicalCenter': medicalCenter.toJson(),
+  };
+}
 
   static List<Post> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((json) => Post.fromJson(json)).toList();

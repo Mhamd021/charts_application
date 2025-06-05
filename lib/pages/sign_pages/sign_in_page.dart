@@ -11,7 +11,6 @@ class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _SigninPageState createState() => _SigninPageState();
 }
 
@@ -53,8 +52,7 @@ class _SigninPageState extends State<SigninPage> {
           Get.snackbar(
             "Failed".tr,
             status.message,
-            backgroundColor: Colors.deepPurple,
-            colorText: Colors.white,
+            colorText: Colors.black,
             snackPosition: SnackPosition.TOP,
             
           );
@@ -97,26 +95,20 @@ class _SigninPageState extends State<SigninPage> {
             children: [
               SizedBox(height: Dimensions.height30(context) * 4),
 
-              // App logo
-              SizedBox(
-                height: Dimensions.height20(context) * 5,
-                child: Center(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: Dimensions.radius15(context) * 5,
-                    backgroundImage: const AssetImage(
-                      "assets/image/app_logo.png",
-                    ),
-                  ),
+             Center(
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: Dimensions.radius15(context) * 5,
+                  backgroundImage: const AssetImage("assets/image/app_logo.png"),
                 ),
               ),
 
-              SizedBox(height: Dimensions.height30(context) * 2),
+              SizedBox(height: Dimensions.height30(context) + Dimensions.height20(context)),
 
               // Optional Welcome Message
                Text(
                 "welcome".tr,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: Dimensions.font26(context), fontWeight: FontWeight.bold),
               ),
               SizedBox(height: Dimensions.height30(context)),
 

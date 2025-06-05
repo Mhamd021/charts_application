@@ -1,3 +1,4 @@
+import 'package:charts_application/constants/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class InfoRowWidget extends StatelessWidget {
@@ -8,10 +9,10 @@ class InfoRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (value == null || value!.isEmpty) return const SizedBox(); // Hide if no data
+    if (value == null || value!.isEmpty) return const SizedBox();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      padding:  EdgeInsets.symmetric(vertical: Dimensions.height12(context)/2),
       child: Row(
         children: [
           Text("$label: ", 
@@ -23,7 +24,7 @@ class InfoRowWidget extends StatelessWidget {
           Text(value!, 
               style: TextStyle(
                 color: Colors.grey[600],
-                fontSize: 15,
+                fontSize: Dimensions.font16(context),
               )),
         ],
       ),
